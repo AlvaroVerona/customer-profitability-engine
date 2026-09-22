@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+.env
+
+data/raw/*.parquet
+data/processed/*.parquet
+data/features/*.parquet
+reports/figures/*.png
+reports/figures/*.html
+
+.ipynb_checkpoints/
+.DS_Store

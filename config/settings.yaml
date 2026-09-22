@@ -1,0 +1,39 @@
+seed: 42
+
+data:
+  n_customers: 20000
+  n_months: 36
+  window_start_date: "2023-01-01"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  features_dir: "data/features"
+  missing_rate: 0.01
+  duplicate_rate: 0.003
+
+models:
+  test_months: 6
+  validation_months: 3
+
+clv:
+  horizon_months: 36
+  annual_discount_rate: 0.08
+
+simulation:
+  n_simulations: 10000
+
+optimization:
+  default_budget: 100000
+  default_capacity: 5000
+
+ftp:
+  base_ftp_rate_annual: 0.045
+  market_rate_annual: 0.035
+
+risk:
+  cost_per_support_contact: 8.0
+  cac_by_channel:
+    organic: 15.0
+    paid_search: 65.0
+    referral: 25.0
+    partnership: 45.0
+    advertising: 80.0
