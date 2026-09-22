@@ -106,3 +106,44 @@ CUSTOMER_MONTHLY_SCHEMA: dict[str, str] = {
     "satisfaction_proxy": "float64",
     "churned_this_month": "boolean",
 }
+
+TABLE_SCHEMAS: dict[str, dict[str, str]] = {
+    "customers": CUSTOMERS_SCHEMA,
+    "accounts": ACCOUNTS_SCHEMA,
+    "deposits": DEPOSITS_SCHEMA,
+    "cards": CARDS_SCHEMA,
+    "loans": LOANS_SCHEMA,
+    "customer_service": CUSTOMER_SERVICE_SCHEMA,
+    "customer_monthly": CUSTOMER_MONTHLY_SCHEMA,
+}
+
+# Columns whose combination should uniquely identify a row. Phase 2 uses this
+# both to detect duplicate business records and to flag rows with a missing
+# key component (which breaks joins and must never be silently dropped).
+PRIMARY_KEYS: dict[str, list[str]] = {
+    "customers": ["customer_id"],
+    "accounts": ["customer_id", "product"],
+    "deposits": ["customer_id", "month", "product"],
+    "cards": ["customer_id", "month"],
+    "loans": ["loan_id", "month"],
+    "customer_service": ["customer_id", "month"],
+    "customer_monthly": ["customer_id", "month"],
+}
+
+# Missing-value severity per (table, column), used by the Phase 2 quality
+# engine to distinguish expected / suspicious / critical missingness rather
+# than treating all nulls the same way.
+#   - critical:   breaks identity, joins, or a required financial calculation
+#                 -> the row is quarantined.
+#   - suspicious: degrades a calculation but doesn't invalidate the row
+#                 -> the row stays validated, but is counted and reported.
+#   - expected:   a soft/optional field that is legitimately sometimes absent.
+MISSING_SEVERITY: dict[str, dict[str, str]] = {
+    "customers": {"churn_date": "expected"},  # NaT simply means "still active"
+    "accounts": {"account_close_date": "expected"},  # NaT simply means "still open"
+    "deposits": {"average_balance": "suspicious", "deposit_rate": "suspicious"},
+    "cards": {"transaction_volume": "suspicious"},
+    "customer_service": {"average_handling_time": "expected"},
+    "customer_monthly": {"satisfaction_proxy": "expected"},
+    "loans": {"interest_rate": "critical"},
+}

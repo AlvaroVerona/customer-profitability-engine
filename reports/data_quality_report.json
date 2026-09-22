@@ -1,0 +1,227 @@
+{
+  "overall_quality_score": 99.5805605880239,
+  "tables": {
+    "customers": {
+      "table": "customers",
+      "total_records": 20060,
+      "missing_columns": [],
+      "extra_columns": [],
+      "missing_primary_key_count": 0,
+      "duplicate_count": 60,
+      "missingness": [
+        {
+          "column": "churn_date",
+          "missing_count": 12692,
+          "missing_rate": 0.6327018943170488,
+          "severity": "expected"
+        }
+      ],
+      "invalid_value_counts": {
+        "age_out_of_range": 0,
+        "income_negative": 0,
+        "churn_before_acquisition": 0
+      },
+      "temporal_violations": {},
+      "referential_violations": {},
+      "quarantined_count": 60,
+      "validated_count": 20000,
+      "quality_score": 99.70089730807577
+    },
+    "accounts": {
+      "table": "accounts",
+      "total_records": 75367,
+      "missing_columns": [],
+      "extra_columns": [],
+      "missing_primary_key_count": 0,
+      "duplicate_count": 225,
+      "missingness": [
+        {
+          "column": "account_close_date",
+          "missing_count": 49278,
+          "missing_rate": 0.6538405402895167,
+          "severity": "expected"
+        }
+      ],
+      "invalid_value_counts": {},
+      "temporal_violations": {},
+      "referential_violations": {
+        "customer_id_not_in_customers": 0
+      },
+      "quarantined_count": 225,
+      "validated_count": 75142,
+      "quality_score": 99.70146085156634
+    },
+    "deposits": {
+      "table": "deposits",
+      "total_records": 389328,
+      "missing_columns": [],
+      "extra_columns": [],
+      "missing_primary_key_count": 0,
+      "duplicate_count": 1164,
+      "missingness": [
+        {
+          "column": "average_balance",
+          "missing_count": 3994,
+          "missing_rate": 0.010258702174002383,
+          "severity": "suspicious"
+        },
+        {
+          "column": "deposit_rate",
+          "missing_count": 3869,
+          "missing_rate": 0.009937636132001808,
+          "severity": "suspicious"
+        }
+      ],
+      "invalid_value_counts": {
+        "opening_balance_negative": 0,
+        "closing_balance_negative": 0,
+        "average_balance_negative": 0,
+        "inflows_negative": 0,
+        "outflows_negative": 0,
+        "deposit_rate_negative": 0
+      },
+      "temporal_violations": {
+        "before_acquisition": 0,
+        "after_churn": 0
+      },
+      "referential_violations": {
+        "customer_id_not_in_customers": 0
+      },
+      "quarantined_count": 1164,
+      "validated_count": 388164,
+      "quality_score": 99.60004161015904
+    },
+    "cards": {
+      "table": "cards",
+      "total_records": 379812,
+      "missing_columns": [],
+      "extra_columns": [],
+      "missing_primary_key_count": 0,
+      "duplicate_count": 1136,
+      "missingness": [
+        {
+          "column": "transaction_volume",
+          "missing_count": 3696,
+          "missing_rate": 0.009731130138068308,
+          "severity": "suspicious"
+        }
+      ],
+      "invalid_value_counts": {
+        "transaction_count_negative": 0,
+        "transaction_volume_negative": 0,
+        "atm_withdrawal_volume_negative": 0,
+        "payment_processing_cost_negative": 0
+      },
+      "temporal_violations": {
+        "before_acquisition": 0,
+        "after_churn": 0
+      },
+      "referential_violations": {
+        "customer_id_not_in_customers": 0
+      },
+      "quarantined_count": 1136,
+      "validated_count": 378676,
+      "quality_score": 99.60359335671332
+    },
+    "loans": {
+      "table": "loans",
+      "total_records": 105105,
+      "missing_columns": [],
+      "extra_columns": [],
+      "missing_primary_key_count": 0,
+      "duplicate_count": 314,
+      "missingness": [
+        {
+          "column": "interest_rate",
+          "missing_count": 1020,
+          "missing_rate": 0.009704581133152562,
+          "severity": "critical"
+        }
+      ],
+      "invalid_value_counts": {
+        "outstanding_balance_negative": 0,
+        "credit_limit_negative": 0,
+        "interest_income_negative": 0,
+        "ead_negative": 0,
+        "interest_rate_negative": 0,
+        "pd_out_of_range": 0,
+        "lgd_out_of_range": 0,
+        "utilization_out_of_range": 0
+      },
+      "temporal_violations": {
+        "before_acquisition": 0,
+        "after_churn": 0,
+        "before_origination": 0
+      },
+      "referential_violations": {
+        "customer_id_not_in_customers": 0
+      },
+      "quarantined_count": 1332,
+      "validated_count": 103773,
+      "quality_score": 98.73269587555302
+    },
+    "customer_service": {
+      "table": "customer_service",
+      "total_records": 118627,
+      "missing_columns": [],
+      "extra_columns": [],
+      "missing_primary_key_count": 0,
+      "duplicate_count": 354,
+      "missingness": [
+        {
+          "column": "average_handling_time",
+          "missing_count": 1205,
+          "missing_rate": 0.010157889856440776,
+          "severity": "expected"
+        }
+      ],
+      "invalid_value_counts": {
+        "support_contacts_negative": 0,
+        "handling_time_negative": 0,
+        "service_cost_negative": 0
+      },
+      "temporal_violations": {
+        "before_acquisition": 0,
+        "after_churn": 0
+      },
+      "referential_violations": {
+        "customer_id_not_in_customers": 0
+      },
+      "quarantined_count": 354,
+      "validated_count": 118273,
+      "quality_score": 99.70158564239169
+    },
+    "customer_monthly": {
+      "table": "customer_monthly",
+      "total_records": 389328,
+      "missing_columns": [],
+      "extra_columns": [],
+      "missing_primary_key_count": 0,
+      "duplicate_count": 1164,
+      "missingness": [
+        {
+          "column": "satisfaction_proxy",
+          "missing_count": 3928,
+          "missing_rate": 0.010089179303826079,
+          "severity": "expected"
+        }
+      ],
+      "invalid_value_counts": {
+        "tenure_negative": 0,
+        "product_count_negative": 0,
+        "satisfaction_out_of_range": 0
+      },
+      "temporal_violations": {
+        "before_acquisition": 0,
+        "after_churn": 0,
+        "negative_tenure": 0
+      },
+      "referential_violations": {
+        "customer_id_not_in_customers": 0
+      },
+      "quarantined_count": 1164,
+      "validated_count": 388164,
+      "quality_score": 99.70102330168906
+    }
+  }
+}

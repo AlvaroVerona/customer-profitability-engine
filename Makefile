@@ -12,6 +12,7 @@ generate-data:
 quality:
 	uv run python -m customer_profitability.data.quality
 
+
 features:
 	uv run python -c "print('Phase 3 not implemented yet')"
 

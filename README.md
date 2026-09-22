@@ -9,13 +9,13 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) and Phase 1 (synthetic data generation)
-> are complete.** Everything from Phase 2 onward (data quality, profitability
-> engine, econometrics, ML, CLV, segmentation, action simulation,
-> optimization, dashboard) is not yet implemented. This README will be
-> replaced by the full portfolio-quality version in Phase 18, once those
-> results actually exist — nothing below is a business finding, only a
-> description of what runs today.
+> **Status: Phase 0 (project setup), Phase 1 (synthetic data generation) and
+> Phase 2 (data quality engine) are complete.** Everything from Phase 3
+> onward (Customer 360, profitability engine, econometrics, ML, CLV,
+> segmentation, action simulation, optimization, dashboard) is not yet
+> implemented. This README will be replaced by the full portfolio-quality
+> version in Phase 18, once those results actually exist — nothing below is
+> a business finding, only a description of what runs today.
 
 ## What exists today
 
@@ -25,18 +25,27 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   and `customer_monthly` parquet tables under `data/raw/`.
 - Deliberately realistic correlation structure (income ↔ age ↔ segment ↔
   balances ↔ credit limits), a documented multi-factor churn hazard, and
-  deliberately injected missing values / duplicate rows for the upcoming
-  Phase 2 data quality engine. See [`data/README.md`](data/README.md) for
-  full generation and churn-mechanism documentation.
-- 14 passing unit tests (`tests/test_data_generation.py`) covering
-  reproducibility, financial validity, temporal/referential integrity, and
-  correlation structure.
+  deliberately injected missing values / duplicate rows for the Phase 2 data
+  quality engine to catch. See [`data/README.md`](data/README.md) for full
+  generation and churn-mechanism documentation.
+- A Phase 2 Data Quality Engine (`src/customer_profitability/data/quality.py`)
+  running structural, missingness (expected/suspicious/critical),
+  duplicate, financial-validity, temporal-consistency, and
+  referential-integrity checks on every raw table. It never silently drops a
+  row: every table is split into `data/processed/<table>_validated.parquet`
+  and `data/processed/<table>_quarantined.parquet`, and a scored report is
+  written to `reports/data_quality_report.{md,json}`.
+- 22 passing unit tests (`tests/test_data_generation.py`,
+  `tests/test_data_quality.py`) covering reproducibility, financial
+  validity, temporal/referential integrity, correlation structure, and every
+  quality-engine check against hand-crafted defective rows.
 
 ## Reproducibility
 
 ```bash
 make install         # uv sync
 make generate-data    # regenerate data/raw/*.parquet (seed 42)
+make quality           # run the data quality engine -> data/processed/, reports/
 make test              # run the test suite
 ```
 
@@ -56,7 +65,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `src/customer_profitability/{data,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,utils}/`, `tests/`.
 
 ## Tech stack
 
