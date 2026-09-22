@@ -9,13 +9,14 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup), Phase 1 (synthetic data generation) and
-> Phase 2 (data quality engine) are complete.** Everything from Phase 3
-> onward (Customer 360, profitability engine, econometrics, ML, CLV,
-> segmentation, action simulation, optimization, dashboard) is not yet
-> implemented. This README will be replaced by the full portfolio-quality
-> version in Phase 18, once those results actually exist — nothing below is
-> a business finding, only a description of what runs today.
+> **Status: Phase 0 (project setup), Phase 1 (synthetic data generation),
+> Phase 2 (data quality engine), and Phase 3 (Customer 360 feature
+> engineering) are complete.** Everything from Phase 4 onward (profitability
+> engine, econometrics, ML, CLV, segmentation, action simulation,
+> optimization, dashboard) is not yet implemented. This README will be
+> replaced by the full portfolio-quality version in Phase 18, once those
+> results actually exist — nothing below is a business finding, only a
+> description of what runs today.
 
 ## What exists today
 
@@ -35,10 +36,20 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   row: every table is split into `data/processed/<table>_validated.parquet`
   and `data/processed/<table>_quarantined.parquet`, and a scored report is
   written to `reports/data_quality_report.{md,json}`.
-- 22 passing unit tests (`tests/test_data_generation.py`,
-  `tests/test_data_quality.py`) covering reproducibility, financial
-  validity, temporal/referential integrity, correlation structure, and every
-  quality-engine check against hand-crafted defective rows.
+- A Phase 3 Customer 360 pipeline (`src/customer_profitability/features/`)
+  that builds demographic, deposit, transaction, credit, engagement, and
+  behavioral (growth/volatility) features into one customer-month panel at
+  `data/features/customer_360.parquet`, from the Phase 2 *validated* tables.
+  All rolling/growth features are trailing (never look at a future month),
+  and "no exposure to a product" (e.g. no loan) is filled as 0 for amount
+  columns but left `NaN` for ratio columns (e.g. utilization) rather than
+  conflated with "measured as zero".
+- 30 passing unit tests (`tests/test_data_generation.py`,
+  `tests/test_data_quality.py`, `tests/test_features.py`) covering
+  reproducibility, financial validity, temporal/referential integrity,
+  correlation structure, every quality-engine check against hand-crafted
+  defective rows, and the feature pipeline's NaN-propagation and
+  no-leakage guarantees.
 
 ## Reproducibility
 
@@ -46,6 +57,7 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 make install         # uv sync
 make generate-data    # regenerate data/raw/*.parquet (seed 42)
 make quality           # run the data quality engine -> data/processed/, reports/
+make features           # build Customer 360 -> data/features/customer_360.parquet
 make test              # run the test suite
 ```
 
@@ -65,7 +77,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,utils}/`, `tests/`.
 
 ## Tech stack
 

@@ -14,7 +14,7 @@ quality:
 
 
 features:
-	uv run python -c "print('Phase 3 not implemented yet')"
+	uv run python -m customer_profitability.features.customer_features
 
 models:
 	uv run python -c "print('Phase 6 not implemented yet')"
