@@ -60,6 +60,19 @@ class RiskConfig:
 
 
 @dataclass(frozen=True)
+class RevenueConfig:
+    interchange_rate: float
+    premium_monthly_fee: float
+    low_balance_fee: float
+    low_balance_threshold: float
+
+
+@dataclass(frozen=True)
+class OperatingConfig:
+    account_servicing_cost_monthly: float
+
+
+@dataclass(frozen=True)
 class Settings:
     seed: int
     data: DataConfig
@@ -69,6 +82,8 @@ class Settings:
     optimization: OptimizationConfig
     ftp: FtpConfig
     risk: RiskConfig
+    revenue: RevenueConfig
+    operating: OperatingConfig
 
     @property
     def raw_dir(self) -> Path:
@@ -100,4 +115,6 @@ def load_settings(path: Path | str | None = None) -> Settings:
         optimization=OptimizationConfig(**raw["optimization"]),
         ftp=FtpConfig(**raw["ftp"]),
         risk=RiskConfig(**raw["risk"]),
+        revenue=RevenueConfig(**raw["revenue"]),
+        operating=OperatingConfig(**raw["operating"]),
     )

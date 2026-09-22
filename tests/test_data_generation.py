@@ -10,38 +10,8 @@ import pandas as pd
 import pytest
 
 from customer_profitability.data.generator import generate_all
-from customer_profitability.utils.config import (
-    ClvConfig,
-    DataConfig,
-    FtpConfig,
-    ModelsConfig,
-    OptimizationConfig,
-    RiskConfig,
-    Settings,
-    SimulationConfig,
-)
 
-
-def _small_settings(seed: int = 42, n_customers: int = 500, n_months: int = 12) -> Settings:
-    return Settings(
-        seed=seed,
-        data=DataConfig(
-            n_customers=n_customers,
-            n_months=n_months,
-            window_start_date="2023-01-01",
-            raw_dir="data/raw",
-            processed_dir="data/processed",
-            features_dir="data/features",
-            missing_rate=0.01,
-            duplicate_rate=0.003,
-        ),
-        models=ModelsConfig(test_months=3, validation_months=2),
-        clv=ClvConfig(horizon_months=12, annual_discount_rate=0.08),
-        simulation=SimulationConfig(n_simulations=100),
-        optimization=OptimizationConfig(default_budget=10000, default_capacity=500),
-        ftp=FtpConfig(base_ftp_rate_annual=0.045, market_rate_annual=0.035),
-        risk=RiskConfig(cost_per_support_contact=8.0, cac_by_channel={"organic": 15.0}),
-    )
+from .conftest import small_settings as _small_settings
 
 
 @pytest.fixture(scope="module")

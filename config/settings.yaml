@@ -37,3 +37,12 @@ risk:
     referral: 25.0
     partnership: 45.0
     advertising: 80.0
+
+revenue:
+  interchange_rate: 0.007
+  premium_monthly_fee: 12.0
+  low_balance_fee: 4.0
+  low_balance_threshold: 300.0
+
+operating:
+  account_servicing_cost_monthly: 0.8

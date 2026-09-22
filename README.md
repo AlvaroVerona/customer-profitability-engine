@@ -9,14 +9,13 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup), Phase 1 (synthetic data generation),
-> Phase 2 (data quality engine), and Phase 3 (Customer 360 feature
-> engineering) are complete.** Everything from Phase 4 onward (profitability
-> engine, econometrics, ML, CLV, segmentation, action simulation,
-> optimization, dashboard) is not yet implemented. This README will be
-> replaced by the full portfolio-quality version in Phase 18, once those
-> results actually exist — nothing below is a business finding, only a
-> description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 4 (historical
+> profitability engine) are complete.** Everything from Phase 5 onward
+> (econometrics, ML, CLV, segmentation, action simulation, optimization,
+> dashboard) is not yet implemented. This README will be replaced by the
+> full portfolio-quality version in Phase 18, once those results actually
+> exist — nothing below is a business finding, only a description of what
+> runs today.
 
 ## What exists today
 
@@ -44,12 +43,31 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   and "no exposure to a product" (e.g. no loan) is filled as 0 for amount
   columns but left `NaN` for ratio columns (e.g. utilization) rather than
   conflated with "measured as zero".
-- 30 passing unit tests (`tests/test_data_generation.py`,
-  `tests/test_data_quality.py`, `tests/test_features.py`) covering
-  reproducibility, financial validity, temporal/referential integrity,
-  correlation structure, every quality-engine check against hand-crafted
-  defective rows, and the feature pipeline's NaN-propagation and
-  no-leakage guarantees.
+- A Phase 4 Historical Customer Profitability Engine
+  (`src/customer_profitability/profitability/`) computing, per customer per
+  month: interest/interchange/fee revenue, deposit funding contribution via
+  a documented FTP mechanism, expected credit loss (PD x LGD x EAD),
+  operating cost, and acquisition cost (recognized once, in the
+  acquisition month, only for customers acquired inside the observed
+  window) -- rolled up into the
+  `Revenue -> Gross Contribution -> Risk-Adjusted Contribution -> Economic Profit`
+  waterfall from `PROJECT_SPEC.md` section 3, plus per-customer summary
+  metrics (profit margin, contribution margin, revenue/cost per month) and
+  monthly/quarterly/annual aggregation. Output at
+  `data/processed/profitability_{monthly,customer_summary}.parquet`.
+  On the full synthetic portfolio: 94.3% of customers are profitable,
+  total economic profit ≈ 11.3M, ranked Premium > Affluent > Mass > Student
+  as expected from the underlying income/balance correlations.
+- 45 passing unit tests (`tests/test_data_generation.py`,
+  `tests/test_data_quality.py`, `tests/test_features.py`,
+  `tests/test_ftp.py`, `tests/test_risk_cost.py`,
+  `tests/test_profitability.py`) covering reproducibility, financial
+  validity, temporal/referential integrity, correlation structure, every
+  quality-engine check against hand-crafted defective rows, the feature
+  pipeline's NaN-propagation and no-leakage guarantees, and every
+  profitability formula against hand-calculated examples (interest
+  revenue, interchange revenue, FTP/deposit contribution, expected loss,
+  operating cost, and the full economic-profit waterfall).
 
 ## Reproducibility
 
@@ -58,6 +76,7 @@ make install         # uv sync
 make generate-data    # regenerate data/raw/*.parquet (seed 42)
 make quality           # run the data quality engine -> data/processed/, reports/
 make features           # build Customer 360 -> data/features/customer_360.parquet
+make profitability      # run the profitability engine -> data/processed/profitability_*.parquet
 make test              # run the test suite
 ```
 
@@ -77,7 +96,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,utils}/`, `tests/`.
 
 ## Tech stack
 
