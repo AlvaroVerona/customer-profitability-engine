@@ -1,0 +1,62 @@
+{
+  "CREDIT_PRODUCT": {
+    "n_eligible": 8170,
+    "mean_acceptance_probability": 0.3,
+    "mean_delta_clv": 475.04621347803965,
+    "mean_expected_cost": 4.5,
+    "mean_incremental_profit": 470.54621347803965,
+    "total_incremental_profit": 3844362.564115584,
+    "pct_beats_no_action": 1.0,
+    "action_name": "Credit Product"
+  },
+  "INVESTMENT_PRODUCT": {
+    "n_eligible": 8161,
+    "mean_acceptance_probability": 0.2,
+    "mean_delta_clv": 26.705550800276367,
+    "mean_expected_cost": 2.0,
+    "mean_incremental_profit": 24.705550800276367,
+    "total_incremental_profit": 201622.00008105542,
+    "pct_beats_no_action": 1.0,
+    "action_name": "Investment Product"
+  },
+  "NO_ACTION": {
+    "n_eligible": 12651,
+    "mean_acceptance_probability": 1.0,
+    "mean_delta_clv": 0.0,
+    "mean_expected_cost": 0.0,
+    "mean_incremental_profit": 0.0,
+    "total_incremental_profit": 0.0,
+    "pct_beats_no_action": 0.0,
+    "action_name": "No Action"
+  },
+  "PREMIUM_SUBSCRIPTION": {
+    "n_eligible": 10921,
+    "mean_acceptance_probability": 0.25,
+    "mean_delta_clv": 71.26032865701161,
+    "mean_expected_cost": 2.0,
+    "mean_incremental_profit": 69.26032865701161,
+    "total_incremental_profit": 756392.0492632239,
+    "pct_beats_no_action": 1.0,
+    "action_name": "Premium Subscription"
+  },
+  "RETENTION_INCENTIVE": {
+    "n_eligible": 12651,
+    "mean_acceptance_probability": 0.3502424766210115,
+    "mean_delta_clv": 15.161006138267913,
+    "mean_expected_cost": 7.004849532420229,
+    "mean_incremental_profit": 8.156156605847684,
+    "total_incremental_profit": 103183.53722057906,
+    "pct_beats_no_action": 0.6997075330013438,
+    "action_name": "Retention Incentive"
+  },
+  "SAVINGS_CROSS_SELL": {
+    "n_eligible": 5791,
+    "mean_acceptance_probability": 0.4,
+    "mean_delta_clv": 23.84952122447949,
+    "mean_expected_cost": 2.0,
+    "mean_incremental_profit": 21.84952122447949,
+    "total_incremental_profit": 126530.57741096072,
+    "pct_beats_no_action": 0.82610948022794,
+    "action_name": "Savings Cross-Sell"
+  }
+}

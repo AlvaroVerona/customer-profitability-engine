@@ -54,3 +54,34 @@ actions:
   investment_product_cost: 10.0
   premium_subscription_cost: 8.0
   credit_product_min_income: 12000.0
+
+# Phase 10 per-action simulation parameters. There is no historical offer/
+# acceptance data in this project's synthetic dataset (Phase 1 never
+# generated such events), so acceptance_base and the effect sizes below are
+# documented assumptions -- transparent heuristics, not fitted models -- see
+# actions/simulator.py's module docstring.
+action_simulation:
+  retention_incentive:
+    acceptance_base: 0.25
+    acceptance_churn_sensitivity: 5.0
+    churn_reduction_pct: 0.35
+  savings_cross_sell:
+    acceptance_base: 0.40
+    balance_uplift_pct: 0.15
+    assumed_savings_rate_annual: 0.02
+    churn_reduction_pct: 0.10
+  credit_product:
+    acceptance_base: 0.30
+    credit_limit_income_multiple: 0.25
+    expected_utilization: 0.50
+    interest_rate_annual: 0.15
+    expected_pd_monthly: 0.01
+    expected_lgd: 0.45
+    churn_reduction_pct: 0.10
+  investment_product:
+    acceptance_base: 0.20
+    monthly_fee_revenue: 6.0
+    churn_reduction_pct: 0.10
+  premium_subscription:
+    acceptance_base: 0.25
+    churn_reduction_pct: 0.15

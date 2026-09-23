@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 9 (customer action
-> framework) are complete.** Everything from Phase 10 onward (action
-> impact simulation, optimization, dashboard) is not yet implemented. This
-> README will be replaced by the full portfolio-quality version in Phase
-> 18, once those results actually exist — nothing below is a business
-> finding, only a description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 10 (action impact
+> simulation) are complete.** Everything from Phase 11 onward
+> (optimization, Monte Carlo scenarios, dashboard) is not yet implemented.
+> This README will be replaced by the full portfolio-quality version in
+> Phase 18, once those results actually exist — nothing below is a
+> business finding, only a description of what runs today.
 
 ## What exists today
 
@@ -173,7 +173,34 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   Investment Product, 10,921 for Premium Subscription. Output at
   `data/processed/action_eligibility.parquet` and
   `reports/actions_report.{md,json}`.
-- 104 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 10 Action Impact Simulation (`actions/simulator.py` +
+  `actions/incremental_value.py`):
+  `IncrementalProfit_{i,a} = ExpectedProfit_{i,a} - ExpectedProfit_{i,NoAction} - ActionCost_{i,a}`,
+  where both `ExpectedProfit` terms are *future* values from Phase 7's CLV
+  machinery -- so this is the incremental discounted future value of
+  offering an action, not a single month's delta. Every effect
+  (acceptance probability, churn-hazard reduction, additional revenue,
+  additional balance, additional risk, operational/incentive cost) is a
+  documented heuristic formula per action, not a fitted model: this
+  project's synthetic dataset has no historical offer/acceptance events
+  anywhere to fit one from, and pretending otherwise would be exactly the
+  kind of fabricated result Development Principle #2 rules out. Every
+  effect is blended by acceptance probability before it reaches the CLV
+  formula (a declined offer changes nothing), and `NO_ACTION` nets to
+  ~0 by construction -- not a special case, since all of its effect
+  columns are 0 (verified in `test_actions.py`). Reports both `delta_clv`
+  (gross future-value change) and `incremental_profit` (net of expected
+  action cost), matching PROJECT_SPEC.md's Page 6 mockup columns. On the
+  full portfolio (12,651 active customers, 58,345 eligible customer/action
+  pairs): Credit Product has the largest mean incremental profit (~471,
+  100% beat `NO_ACTION`) but Retention Incentive is the most
+  differentiated -- only 70% of customers show a positive incremental
+  value from it, meaning offering it to genuinely low-risk customers
+  usually isn't worth the incentive cost, exactly the "do not assume every
+  accepted action creates identical value" case PROJECT_SPEC.md 10 asks
+  for. Output at `data/processed/action_incremental_value.parquet` and
+  `reports/action_simulation_report.{md,json}`.
+- 113 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
@@ -188,8 +215,10 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   and calibration, Phase 7's discounting formulas against both hand
   calculations and a large-sample Monte Carlo cross-check, every Phase 8
   labeling rule (including duplicate-name disambiguation) against
-  hand-built cluster centroids, and every Phase 9 eligibility rule against
-  hand-built customer/account scenarios.
+  hand-built cluster centroids, every Phase 9 eligibility rule against
+  hand-built customer/account scenarios, and every Phase 10 action effect
+  formula against hand-calculated examples, including that `NO_ACTION`
+  nets to exactly zero.
 
 ## Reproducibility
 
@@ -204,6 +233,7 @@ make models             # fit all Phase 6 models, persist champions -> reports/m
 make clv                # build CLV (needs make models to have run first) -> data/processed/clv.parquet
 make segmentation       # cluster customers (needs make clv) -> reports/segmentation_report.{md,json}
 make actions             # action catalog + eligibility -> reports/actions_report.{md,json}
+make action-simulation   # incremental value per customer/action -> reports/action_simulation_report.{md,json}
 make test              # run the test suite
 ```
 

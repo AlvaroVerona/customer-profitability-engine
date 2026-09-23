@@ -83,6 +83,18 @@ class ActionsConfig:
 
 
 @dataclass(frozen=True)
+class ActionSimulationConfig:
+    """Per-action Phase 10 simulation parameters, e.g.
+    `params["retention_incentive"]["churn_reduction_pct"]`. Kept as a plain
+    nested dict (like `RiskConfig.cac_by_channel`) rather than one dataclass
+    per action, since each action's parameter set is genuinely different
+    (a savings cross-sell has a balance uplift, a credit product has a PD/LGD
+    pair, etc.) and a shared dataclass would need every field optional."""
+
+    params: dict[str, dict[str, float]] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
 class Settings:
     seed: int
     data: DataConfig
@@ -95,6 +107,7 @@ class Settings:
     revenue: RevenueConfig
     operating: OperatingConfig
     actions: ActionsConfig
+    action_simulation: ActionSimulationConfig
 
     @property
     def raw_dir(self) -> Path:
@@ -129,4 +142,5 @@ def load_settings(path: Path | str | None = None) -> Settings:
         revenue=RevenueConfig(**raw["revenue"]),
         operating=OperatingConfig(**raw["operating"]),
         actions=ActionsConfig(**raw["actions"]),
+        action_simulation=ActionSimulationConfig(params=raw["action_simulation"]),
     )
