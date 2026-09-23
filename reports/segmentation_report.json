@@ -1,0 +1,23 @@
+{
+  "best_k": 7,
+  "kmeans_silhouette": 0.2226943196815447,
+  "hierarchical_silhouette": 0.14033859301494073,
+  "segment_names": {
+    "0": "Balanced Segment 0",
+    "1": "Credit-Driven",
+    "2": "Balanced Segment 2",
+    "3": "Deposit Funders",
+    "4": "High Value II",
+    "5": "Transactional",
+    "6": "High Value I"
+  },
+  "segment_sizes": {
+    "Balanced Segment 0": 3808,
+    "Credit-Driven": 1185,
+    "Balanced Segment 2": 2083,
+    "Deposit Funders": 2524,
+    "High Value II": 1144,
+    "Transactional": 1656,
+    "High Value I": 247
+  }
+}

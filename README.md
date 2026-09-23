@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 7 (Customer Lifetime
-> Value) are complete.** Everything from Phase 8 onward (segmentation,
-> action simulation, optimization, dashboard) is not yet implemented. This
-> README will be replaced by the full portfolio-quality version in Phase
-> 18, once those results actually exist — nothing below is a business
-> finding, only a description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 8 (economic
+> segmentation) are complete.** Everything from Phase 9 onward (action
+> simulation, optimization, dashboard) is not yet implemented. This README
+> will be replaced by the full portfolio-quality version in Phase 18, once
+> those results actually exist — nothing below is a business finding, only
+> a description of what runs today.
 
 ## What exists today
 
@@ -122,19 +122,49 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   future CLV is ~10.5M against ~11.3M of total historical profit across
   all 20,000. Output at `data/processed/clv.parquet` and
   `reports/clv_report.{md,json}`.
-- 84 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 8 Economic Customer Segmentation
+  (`src/customer_profitability/segmentation/`): K-Means on 12 standardized
+  economic variables (historical profit, CLV, revenue, funding
+  contribution, expected loss, operating cost, engagement, transaction
+  volume, product count, churn probability, balance, credit utilization)
+  -- deliberately no demographics. Already-churned customers are excluded
+  (their churn probability is a placeholder 1.0 by construction, not a
+  real risk estimate, which would confound "at risk" with "already gone").
+  k is chosen by silhouette score restricted to k >= 5: the raw
+  silhouette-argmax is k=3, which scores marginally higher but produces
+  one clear "High Value" cluster and two large, barely-differentiated
+  ones that don't cross the labeling cascade's extremity threshold --
+  excluding k=3-4 is a documented business-interpretability call, not
+  silently overriding the metric. Segment names come from a deterministic
+  rule over each cluster's standardized centroid (`profiling.label_segments`):
+  a cluster only gets one of PROJECT_SPEC.md 8's example names (High
+  Value, Deposit Funders, Credit-Driven, ...) if it is actually extreme on
+  the matching dimension(s); otherwise it's labeled a generic "Balanced
+  Segment N", and two clusters that independently earn the same name are
+  disambiguated by profit rank ("High Value I"/"II") rather than left
+  ambiguous. Hierarchical (Ward) clustering on a subsample cross-checks
+  K-Means' structure. On the full portfolio (k=7): segments span from
+  "Balanced Segment 2" (2,083 low-activity customers, ~46 mean historical
+  profit) to "High Value I" (247 customers, ~5,092 mean historical
+  profit, 0.73 mean utilization), with "Deposit Funders", "Credit-Driven",
+  and "Transactional" all emerging as distinct, correctly-labeled groups.
+  Output at `data/processed/{customer_segments,segment_profiles}.parquet`
+  and `reports/segmentation_report.{md,json}`.
+- 97 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
-  `tests/test_models.py`, `tests/test_clv.py`) covering reproducibility,
-  financial validity, temporal/referential integrity, correlation
-  structure, every quality-engine check against hand-crafted defective
-  rows, the feature pipeline's NaN-propagation and no-leakage guarantees,
-  every profitability formula against hand-calculated examples, both
-  econometric models' ability to recover *known* true coefficients from
-  simulated data, every Phase 6 target's forward-shift/eligibility logic
-  and calibration, and Phase 7's discounting formulas against both hand
-  calculations and a large-sample Monte Carlo cross-check.
+  `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`)
+  covering reproducibility, financial validity, temporal/referential
+  integrity, correlation structure, every quality-engine check against
+  hand-crafted defective rows, the feature pipeline's NaN-propagation and
+  no-leakage guarantees, every profitability formula against
+  hand-calculated examples, both econometric models' ability to recover
+  *known* true coefficients from simulated data, every Phase 6 target's
+  forward-shift/eligibility logic and calibration, Phase 7's discounting
+  formulas against both hand calculations and a large-sample Monte Carlo
+  cross-check, and every Phase 8 labeling rule (including duplicate-name
+  disambiguation) against hand-built cluster centroids.
 
 ## Reproducibility
 
@@ -147,6 +177,7 @@ make profitability      # run the profitability engine -> data/processed/profita
 make econometrics       # fit revenue/churn driver models -> reports/econometrics_report.{md,json}
 make models             # fit all Phase 6 models, persist champions -> reports/ml_report.{md,json}
 make clv                # build CLV (needs make models to have run first) -> data/processed/clv.parquet
+make segmentation       # cluster customers (needs make clv) -> reports/segmentation_report.{md,json}
 make test              # run the test suite
 ```
 
@@ -166,7 +197,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,utils}/`, `tests/`.
 
 ## Tech stack
 
