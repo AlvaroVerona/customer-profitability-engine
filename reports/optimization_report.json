@@ -1,0 +1,24 @@
+{
+  "status": "OPTIMAL",
+  "n_candidates": 44406,
+  "n_selected": 5000,
+  "total_cost": 13486.23,
+  "remaining_budget": 86513.77,
+  "total_incremental_profit": 1380049.68,
+  "total_delta_clv": 1393535.8161898947,
+  "total_expected_incremental_risk_monthly": 20000.0,
+  "expected_monthly_churns_averted": 0.5538686789505212,
+  "action_distribution": {
+    "PREMIUM_SUBSCRIPTION": 3577,
+    "CREDIT_PRODUCT": 1150,
+    "SAVINGS_CROSS_SELL": 182,
+    "RETENTION_INCENTIVE": 91
+  },
+  "counterfactual": {
+    "no_optimization_incremental_profit": 0.0,
+    "no_optimization_cost": 0.0,
+    "optimized_incremental_profit": 1380049.68,
+    "optimized_cost": 13486.23,
+    "value_added_by_optimization": 1380049.68
+  }
+}

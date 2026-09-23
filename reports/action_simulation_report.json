@@ -2,20 +2,20 @@
   "CREDIT_PRODUCT": {
     "n_eligible": 8170,
     "mean_acceptance_probability": 0.3,
-    "mean_delta_clv": 475.04621347803965,
+    "mean_delta_clv": 475.04621347803976,
     "mean_expected_cost": 4.5,
-    "mean_incremental_profit": 470.54621347803965,
-    "total_incremental_profit": 3844362.564115584,
+    "mean_incremental_profit": 470.54621347803976,
+    "total_incremental_profit": 3844362.564115585,
     "pct_beats_no_action": 1.0,
     "action_name": "Credit Product"
   },
   "INVESTMENT_PRODUCT": {
     "n_eligible": 8161,
     "mean_acceptance_probability": 0.2,
-    "mean_delta_clv": 26.705550800276367,
+    "mean_delta_clv": 26.705550800276338,
     "mean_expected_cost": 2.0,
-    "mean_incremental_profit": 24.705550800276367,
-    "total_incremental_profit": 201622.00008105542,
+    "mean_incremental_profit": 24.705550800276338,
+    "total_incremental_profit": 201622.0000810552,
     "pct_beats_no_action": 1.0,
     "action_name": "Investment Product"
   },
@@ -32,30 +32,30 @@
   "PREMIUM_SUBSCRIPTION": {
     "n_eligible": 10921,
     "mean_acceptance_probability": 0.25,
-    "mean_delta_clv": 71.26032865701161,
+    "mean_delta_clv": 71.26032865701168,
     "mean_expected_cost": 2.0,
-    "mean_incremental_profit": 69.26032865701161,
-    "total_incremental_profit": 756392.0492632239,
+    "mean_incremental_profit": 69.26032865701168,
+    "total_incremental_profit": 756392.0492632246,
     "pct_beats_no_action": 1.0,
     "action_name": "Premium Subscription"
   },
   "RETENTION_INCENTIVE": {
     "n_eligible": 12651,
-    "mean_acceptance_probability": 0.3502424766210115,
-    "mean_delta_clv": 15.161006138267913,
-    "mean_expected_cost": 7.004849532420229,
-    "mean_incremental_profit": 8.156156605847684,
-    "total_incremental_profit": 103183.53722057906,
+    "mean_acceptance_probability": 0.3502424766210114,
+    "mean_delta_clv": 15.1610061382679,
+    "mean_expected_cost": 7.004849532420227,
+    "mean_incremental_profit": 8.156156605847672,
+    "total_incremental_profit": 103183.5372205789,
     "pct_beats_no_action": 0.6997075330013438,
     "action_name": "Retention Incentive"
   },
   "SAVINGS_CROSS_SELL": {
     "n_eligible": 5791,
     "mean_acceptance_probability": 0.4,
-    "mean_delta_clv": 23.84952122447949,
+    "mean_delta_clv": 23.84952122447951,
     "mean_expected_cost": 2.0,
-    "mean_incremental_profit": 21.84952122447949,
-    "total_incremental_profit": 126530.57741096072,
+    "mean_incremental_profit": 21.84952122447951,
+    "total_incremental_profit": 126530.57741096085,
     "pct_beats_no_action": 0.82610948022794,
     "action_name": "Savings Cross-Sell"
   }

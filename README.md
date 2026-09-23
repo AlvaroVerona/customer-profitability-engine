@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 10 (action impact
-> simulation) are complete.** Everything from Phase 11 onward
-> (optimization, Monte Carlo scenarios, dashboard) is not yet implemented.
-> This README will be replaced by the full portfolio-quality version in
-> Phase 18, once those results actually exist — nothing below is a
-> business finding, only a description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 11 (optimization
+> engine) are complete.** Everything from Phase 12 onward (Monte Carlo
+> scenarios, dashboard) is not yet implemented. This README will be
+> replaced by the full portfolio-quality version in Phase 18, once those
+> results actually exist — nothing below is a business finding, only a
+> description of what runs today.
 
 ## What exists today
 
@@ -200,25 +200,52 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   accepted action creates identical value" case PROJECT_SPEC.md 10 asks
   for. Output at `data/processed/action_incremental_value.parquet` and
   `reports/action_simulation_report.{md,json}`.
-- 113 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 11 Optimization Engine (`src/customer_profitability/optimization/`):
+  an exact 0/1 integer program (OR-Tools CP-SAT) that selects the portfolio
+  of customer/action pairs maximizing total incremental profit subject to
+  budget, operational capacity, aggregate credit-risk, and one-action-per-
+  customer constraints -- `max sum x_{i,a} IncrementalProfit_{i,a}` from
+  PROJECT_SPEC.md 11. Every monetary/risk quantity is scaled to integer
+  cents for CP-SAT; a first run reported a risk total (20,000.28) that
+  looked like it exceeded its own 20,000.00 cap purely because the report
+  summed the original unrounded floats while the solver enforced the
+  constraint on rounded cents -- fixed by summing the same rounded values
+  everywhere (`solver._cent_consistent_sum`), so a reported total can never
+  appear to violate a constraint the solver actually respected exactly.
+  Reports the explicit counterfactual PROJECT_SPEC.md 11 asks for (no
+  optimization vs. optimized allocation) and is explicit in its own report
+  that the selection is optimal *under Phase 10's simulated effects*, not
+  a causal guarantee. On the full portfolio (44,406 candidates after the
+  ROI pre-filter, capacity=5,000, budget=100,000): capacity binds
+  (all 5,000 slots used) and risk binds exactly at the 20,000 cap; budget
+  does not bind (only ~13,486 of 100,000 used) -- total incremental profit
+  1,380,050, entirely additive versus the 0 no-optimization baseline.
+  Action mix: 3,577 Premium Subscription, 1,150 Credit Product, 182
+  Savings Cross-Sell, 91 Retention Incentive. Output at
+  `data/processed/optimized_action_plan.parquet` (every active customer's
+  recommended action, defaulting to `NO_ACTION`) and
+  `reports/optimization_report.{md,json}`.
+- 124 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
   `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`,
-  `tests/test_actions.py`) covering reproducibility, financial validity,
-  temporal/referential integrity, correlation structure, every
-  quality-engine check against hand-crafted defective rows, the feature
-  pipeline's NaN-propagation and no-leakage guarantees, every
-  profitability formula against hand-calculated examples, both
-  econometric models' ability to recover *known* true coefficients from
-  simulated data, every Phase 6 target's forward-shift/eligibility logic
-  and calibration, Phase 7's discounting formulas against both hand
-  calculations and a large-sample Monte Carlo cross-check, every Phase 8
-  labeling rule (including duplicate-name disambiguation) against
-  hand-built cluster centroids, every Phase 9 eligibility rule against
-  hand-built customer/account scenarios, and every Phase 10 action effect
-  formula against hand-calculated examples, including that `NO_ACTION`
-  nets to exactly zero.
+  `tests/test_actions.py`, `tests/test_optimization.py`) covering
+  reproducibility, financial validity, temporal/referential integrity,
+  correlation structure, every quality-engine check against hand-crafted
+  defective rows, the feature pipeline's NaN-propagation and no-leakage
+  guarantees, every profitability formula against hand-calculated
+  examples, both econometric models' ability to recover *known* true
+  coefficients from simulated data, every Phase 6 target's forward-shift/
+  eligibility logic and calibration, Phase 7's discounting formulas
+  against both hand calculations and a large-sample Monte Carlo
+  cross-check, every Phase 8 labeling rule (including duplicate-name
+  disambiguation) against hand-built cluster centroids, every Phase 9
+  eligibility rule against hand-built customer/account scenarios, every
+  Phase 10 action effect formula against hand-calculated examples
+  (including that `NO_ACTION` nets to exactly zero), and every Phase 11
+  constraint (one-per-customer, budget, capacity, risk) against small,
+  hand-solvable optimization instances.
 
 ## Reproducibility
 
@@ -234,6 +261,7 @@ make clv                # build CLV (needs make models to have run first) -> dat
 make segmentation       # cluster customers (needs make clv) -> reports/segmentation_report.{md,json}
 make actions             # action catalog + eligibility -> reports/actions_report.{md,json}
 make action-simulation   # incremental value per customer/action -> reports/action_simulation_report.{md,json}
+make optimize            # solve the budget/capacity/risk-constrained allocation -> reports/optimization_report.{md,json}
 make test              # run the test suite
 ```
 
@@ -253,7 +281,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,utils}/`, `tests/`.
 
 ## Tech stack
 

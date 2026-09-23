@@ -45,6 +45,8 @@ class SimulationConfig:
 class OptimizationConfig:
     default_budget: float
     default_capacity: int
+    default_max_incremental_risk_monthly: float
+    default_min_expected_roi: float
 
 
 @dataclass(frozen=True)

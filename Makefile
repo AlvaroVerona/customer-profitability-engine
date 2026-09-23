@@ -38,7 +38,7 @@ action-simulation:
 	uv run python -m customer_profitability.actions.report
 
 optimize:
-	uv run python -c "print('Phase 11 not implemented yet')"
+	uv run python -m customer_profitability.optimization.report
 
 app:
 	uv run streamlit run app/app.py

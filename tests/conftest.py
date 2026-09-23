@@ -37,7 +37,12 @@ def small_settings(seed: int = 42, n_customers: int = 500, n_months: int = 12) -
         models=ModelsConfig(test_months=3, validation_months=2),
         clv=ClvConfig(horizon_months=12, annual_discount_rate=0.08),
         simulation=SimulationConfig(n_simulations=100),
-        optimization=OptimizationConfig(default_budget=10000, default_capacity=500),
+        optimization=OptimizationConfig(
+            default_budget=10000,
+            default_capacity=500,
+            default_max_incremental_risk_monthly=2000,
+            default_min_expected_roi=0.0,
+        ),
         ftp=FtpConfig(base_ftp_rate_annual=0.045, market_rate_annual=0.035),
         risk=RiskConfig(cost_per_support_contact=8.0, cac_by_channel={"organic": 15.0, "paid_search": 65.0}),
         revenue=RevenueConfig(

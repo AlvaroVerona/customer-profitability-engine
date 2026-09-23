@@ -24,6 +24,17 @@ simulation:
 optimization:
   default_budget: 100000
   default_capacity: 5000
+  # Cap on aggregate incremental expected monthly credit loss added by
+  # selected Credit Product actions (Phase 11's risk constraint). A
+  # documented, adjustable default -- not derived from any external
+  # capital/risk-appetite figure.
+  default_max_incremental_risk_monthly: 20000
+  # Gross-ROI floor (delta_clv / expected_action_cost) an action/customer
+  # pair must clear to even be considered a candidate, before budget/
+  # capacity/risk are applied. 0.0 only screens out candidates with a
+  # negative gross benefit; the real selection pressure comes from the
+  # objective maximization under budget and capacity.
+  default_min_expected_roi: 0.0
 
 ftp:
   base_ftp_rate_annual: 0.045
