@@ -9,6 +9,8 @@ venv/
 
 data/raw/*.parquet
 data/processed/*.parquet
+data/processed/models/*.joblib
+data/processed/models/*.json
 data/features/*.parquet
 reports/figures/*.png
 reports/figures/*.html

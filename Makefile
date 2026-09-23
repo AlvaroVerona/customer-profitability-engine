@@ -26,7 +26,7 @@ models:
 	uv run python -m customer_profitability.models.report
 
 clv:
-	uv run python -c "print('Phase 7 not implemented yet')"
+	uv run python -m customer_profitability.clv.report
 
 optimize:
 	uv run python -c "print('Phase 11 not implemented yet')"

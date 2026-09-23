@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 6 (machine learning) are
-> complete.** Everything from Phase 7 onward (CLV, segmentation, action
-> simulation, optimization, dashboard) is not yet implemented. This README
-> will be replaced by the full portfolio-quality version in Phase 18, once
-> those results actually exist — nothing below is a business finding, only
-> a description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 7 (Customer Lifetime
+> Value) are complete.** Everything from Phase 8 onward (segmentation,
+> action simulation, optimization, dashboard) is not yet implemented. This
+> README will be replaced by the full portfolio-quality version in Phase
+> 18, once those results actually exist — nothing below is a business
+> finding, only a description of what runs today.
 
 ## What exists today
 
@@ -94,18 +94,47 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   per-customer explanation for the churn and revenue champions; on the
   full data, churn's top SHAP driver is `tenure_months`, matching the
   Phase 1 generating mechanism. Output at `reports/ml_report.{md,json}`.
-- 69 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 7 Customer Lifetime Value engine (`src/customer_profitability/clv/`):
+  `CLV_i = HistoricalEconomicProfit_i + sum_t [P(Survival_t) x ExpectedProfit_t] / (1+r)^t`,
+  kept as three explicit columns (`historical_economic_profit`, `future_clv`,
+  `total_customer_economic_value`) rather than one blended number.
+  `P(Survival_t)` comes from Phase 6's *persisted, calibrated* churn model
+  (now saved to `data/processed/models/` by `make models`), evaluated once
+  on each active customer's latest snapshot and held as a constant monthly
+  hazard over the horizon; `ExpectedProfit` is each customer's own trailing
+  3-month run-rate from the Phase 4 profitability panel. Both
+  simplifications (flat hazard, flat profit) are documented in
+  `forecasting.py`'s module docstring. `discounting.py` derives a closed-form
+  survival-weighted annuity factor -- while building it, cross-checking it
+  against a Monte Carlo simulation of the same survival process caught a
+  real off-by-one bug (`S(t) = (1-p)^t` vs. the correct `(1-p)^(t-1)`,
+  needed so the analytical formula and the geometric-distribution
+  simulation converge to the same expectation; see the docstring for the
+  derivation and `test_clv.py` for the cross-check). Phase 7.5's "CLV is
+  not an exact number" is implemented as a batched, vectorized Monte Carlo
+  (`calculator.monte_carlo_clv`, 1,000 sims/customer -- a documented, much
+  smaller number than `config.simulation.n_simulations`, which is sized for
+  Phase 12's portfolio-level scenario analysis, not a per-customer band)
+  producing P5/P50/P95 around each customer's total value. Already-churned
+  customers get `future_clv = 0` and a zero-width band at their historical
+  value -- there is no relationship left to forecast. On the full
+  portfolio: 12,651 of 20,000 customers are still active; their combined
+  future CLV is ~10.5M against ~11.3M of total historical profit across
+  all 20,000. Output at `data/processed/clv.parquet` and
+  `reports/clv_report.{md,json}`.
+- 84 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
-  `tests/test_models.py`) covering reproducibility, financial validity,
-  temporal/referential integrity, correlation structure, every
-  quality-engine check against hand-crafted defective rows, the feature
-  pipeline's NaN-propagation and no-leakage guarantees, every
-  profitability formula against hand-calculated examples, both
+  `tests/test_models.py`, `tests/test_clv.py`) covering reproducibility,
+  financial validity, temporal/referential integrity, correlation
+  structure, every quality-engine check against hand-crafted defective
+  rows, the feature pipeline's NaN-propagation and no-leakage guarantees,
+  every profitability formula against hand-calculated examples, both
   econometric models' ability to recover *known* true coefficients from
-  simulated data, and every Phase 6 target's forward-shift/eligibility
-  logic, time-based split boundaries, and calibration.
+  simulated data, every Phase 6 target's forward-shift/eligibility logic
+  and calibration, and Phase 7's discounting formulas against both hand
+  calculations and a large-sample Monte Carlo cross-check.
 
 ## Reproducibility
 
@@ -116,7 +145,8 @@ make quality           # run the data quality engine -> data/processed/, reports
 make features           # build Customer 360 -> data/features/customer_360.parquet
 make profitability      # run the profitability engine -> data/processed/profitability_*.parquet
 make econometrics       # fit revenue/churn driver models -> reports/econometrics_report.{md,json}
-make models             # fit all Phase 6 models -> reports/ml_report.{md,json}
+make models             # fit all Phase 6 models, persist champions -> reports/ml_report.{md,json}
+make clv                # build CLV (needs make models to have run first) -> data/processed/clv.parquet
 make test              # run the test suite
 ```
 
@@ -136,7 +166,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,utils}/`, `tests/`.
 
 ## Tech stack
 

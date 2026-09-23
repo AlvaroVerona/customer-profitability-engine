@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 
+import joblib
 import pandas as pd
 import shap
 
@@ -234,6 +235,26 @@ def _json_safe(results: dict, explanations: dict) -> dict:
     return out
 
 
+# Champion models persisted for reuse as production forecasters in later
+# phases (Phase 7 CLV needs the calibrated churn model specifically --
+# PROJECT_SPEC.md 6.1 is explicit that its probabilities feed the CLV
+# survival term). Churn is saved *calibrated* (see evaluation.calibrate_probabilities);
+# the regression targets don't have that concept, so their raw champion is saved.
+_PERSISTED_TARGETS = ["churn", "revenue", "deposit_balance", "loan_balance"]
+
+
+def _persist_champion_models(results: dict, models_dir) -> None:
+    models_dir.mkdir(parents=True, exist_ok=True)
+    for target in _PERSISTED_TARGETS:
+        result = results[target]
+        champion = result["champion"]
+        model_entry = result["models"][champion]
+        model = model_entry.get("calibrated_model", model_entry["model"])
+        joblib.dump(model, models_dir / f"{target}_champion.joblib")
+        (models_dir / f"{target}_feature_columns.json").write_text(json.dumps(result["feature_columns"]))
+    logger.info("Persisted champion models for %s to %s", _PERSISTED_TARGETS, models_dir)
+
+
 def main() -> None:
     settings = load_settings()
     results = run_all(settings)
@@ -246,6 +267,8 @@ def main() -> None:
     (reports_dir / "ml_report.md").write_text(to_markdown(results, explanations))
     (reports_dir / "ml_report.json").write_text(json.dumps(_json_safe(results, explanations), indent=2, default=str))
     logger.info("Wrote reports/ml_report.{md,json}")
+
+    _persist_champion_models(results, settings.processed_dir / "models")
 
 
 if __name__ == "__main__":

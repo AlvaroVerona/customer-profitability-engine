@@ -1,0 +1,7 @@
+{
+  "n_customers": 20000,
+  "n_active": 12651,
+  "total_historical_economic_profit": 11291851.974170897,
+  "total_future_clv": 10486499.587692063,
+  "total_customer_economic_value": 21778351.56186296
+}
