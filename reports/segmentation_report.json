@@ -1,6 +1,6 @@
 {
   "best_k": 7,
-  "kmeans_silhouette": 0.2226943196815447,
+  "kmeans_silhouette": 0.22269431968154468,
   "hierarchical_silhouette": 0.14033859301494073,
   "segment_names": {
     "0": "Balanced Segment 0",

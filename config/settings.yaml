@@ -46,3 +46,11 @@ revenue:
 
 operating:
   account_servicing_cost_monthly: 0.8
+
+actions:
+  retention_incentive_cost: 20.0
+  savings_cross_sell_cost: 5.0
+  credit_product_cost: 15.0
+  investment_product_cost: 10.0
+  premium_subscription_cost: 8.0
+  credit_product_min_income: 12000.0

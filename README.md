@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 8 (economic
-> segmentation) are complete.** Everything from Phase 9 onward (action
-> simulation, optimization, dashboard) is not yet implemented. This README
-> will be replaced by the full portfolio-quality version in Phase 18, once
-> those results actually exist — nothing below is a business finding, only
-> a description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 9 (customer action
+> framework) are complete.** Everything from Phase 10 onward (action
+> impact simulation, optimization, dashboard) is not yet implemented. This
+> README will be replaced by the full portfolio-quality version in Phase
+> 18, once those results actually exist — nothing below is a business
+> finding, only a description of what runs today.
 
 ## What exists today
 
@@ -150,21 +150,46 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   and "Transactional" all emerging as distinct, correctly-labeled groups.
   Output at `data/processed/{customer_segments,segment_profiles}.parquet`
   and `reports/segmentation_report.{md,json}`.
-- 97 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 9 Customer Action Framework (`src/customer_profitability/actions/`):
+  six actions -- `NO_ACTION` (mandatory baseline, always eligible, zero
+  cost; PROJECT_SPEC.md 9 requires every intervention to be compared
+  against it), Retention Incentive, Savings Cross-Sell, Credit Product,
+  Investment Product, and Premium Subscription. Costs come from
+  `config.actions` (20/5/15 for retention/savings/credit match the
+  example figures in the spec's own Page 6 mockup; investment/premium
+  costs are this project's own documented assumption, since the spec
+  gives no figure for those two). Eligibility is a per-customer,
+  per-action boolean rule: cross-sell/investment/credit require *not*
+  already owning that product (derived from the validated `accounts`
+  table, reusing Phase 6's ownership-date logic); Credit Product
+  additionally requires a simple income/employment pre-screen (`income >=
+  credit_product_min_income` and not unemployed) since a customer being
+  offered a *first* credit line, by construction, has no existing PD
+  estimate to gate on -- PROJECT_SPEC.md 9's "subject to risk
+  constraints"; Premium Subscription requires not already being in the
+  Premium segment. Segmented only to still-active customers, consistent
+  with Phase 8. On the full portfolio (12,651 active customers): 5,791
+  eligible for Savings Cross-Sell, 8,170 for Credit Product, 8,161 for
+  Investment Product, 10,921 for Premium Subscription. Output at
+  `data/processed/action_eligibility.parquet` and
+  `reports/actions_report.{md,json}`.
+- 104 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
-  `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`)
-  covering reproducibility, financial validity, temporal/referential
-  integrity, correlation structure, every quality-engine check against
-  hand-crafted defective rows, the feature pipeline's NaN-propagation and
-  no-leakage guarantees, every profitability formula against
-  hand-calculated examples, both econometric models' ability to recover
-  *known* true coefficients from simulated data, every Phase 6 target's
-  forward-shift/eligibility logic and calibration, Phase 7's discounting
-  formulas against both hand calculations and a large-sample Monte Carlo
-  cross-check, and every Phase 8 labeling rule (including duplicate-name
-  disambiguation) against hand-built cluster centroids.
+  `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`,
+  `tests/test_actions.py`) covering reproducibility, financial validity,
+  temporal/referential integrity, correlation structure, every
+  quality-engine check against hand-crafted defective rows, the feature
+  pipeline's NaN-propagation and no-leakage guarantees, every
+  profitability formula against hand-calculated examples, both
+  econometric models' ability to recover *known* true coefficients from
+  simulated data, every Phase 6 target's forward-shift/eligibility logic
+  and calibration, Phase 7's discounting formulas against both hand
+  calculations and a large-sample Monte Carlo cross-check, every Phase 8
+  labeling rule (including duplicate-name disambiguation) against
+  hand-built cluster centroids, and every Phase 9 eligibility rule against
+  hand-built customer/account scenarios.
 
 ## Reproducibility
 
@@ -178,6 +203,7 @@ make econometrics       # fit revenue/churn driver models -> reports/econometric
 make models             # fit all Phase 6 models, persist champions -> reports/ml_report.{md,json}
 make clv                # build CLV (needs make models to have run first) -> data/processed/clv.parquet
 make segmentation       # cluster customers (needs make clv) -> reports/segmentation_report.{md,json}
+make actions             # action catalog + eligibility -> reports/actions_report.{md,json}
 make test              # run the test suite
 ```
 
@@ -197,7 +223,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,utils}/`, `tests/`.
 
 ## Tech stack
 

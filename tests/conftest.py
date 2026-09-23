@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from customer_profitability.utils.config import (
+    ActionsConfig,
     ClvConfig,
     DataConfig,
     FtpConfig,
@@ -42,4 +43,12 @@ def small_settings(seed: int = 42, n_customers: int = 500, n_months: int = 12) -
             interchange_rate=0.007, premium_monthly_fee=12.0, low_balance_fee=4.0, low_balance_threshold=300.0
         ),
         operating=OperatingConfig(account_servicing_cost_monthly=0.8),
+        actions=ActionsConfig(
+            retention_incentive_cost=20.0,
+            savings_cross_sell_cost=5.0,
+            credit_product_cost=15.0,
+            investment_product_cost=10.0,
+            premium_subscription_cost=8.0,
+            credit_product_min_income=12000.0,
+        ),
     )

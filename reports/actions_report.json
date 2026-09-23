@@ -1,0 +1,11 @@
+{
+  "eligible_counts": {
+    "NO_ACTION": 12651,
+    "RETENTION_INCENTIVE": 12651,
+    "SAVINGS_CROSS_SELL": 5791,
+    "CREDIT_PRODUCT": 8170,
+    "INVESTMENT_PRODUCT": 8161,
+    "PREMIUM_SUBSCRIPTION": 10921
+  },
+  "n_active_customers": 12651
+}

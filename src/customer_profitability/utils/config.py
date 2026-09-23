@@ -73,6 +73,16 @@ class OperatingConfig:
 
 
 @dataclass(frozen=True)
+class ActionsConfig:
+    retention_incentive_cost: float
+    savings_cross_sell_cost: float
+    credit_product_cost: float
+    investment_product_cost: float
+    premium_subscription_cost: float
+    credit_product_min_income: float
+
+
+@dataclass(frozen=True)
 class Settings:
     seed: int
     data: DataConfig
@@ -84,6 +94,7 @@ class Settings:
     risk: RiskConfig
     revenue: RevenueConfig
     operating: OperatingConfig
+    actions: ActionsConfig
 
     @property
     def raw_dir(self) -> Path:
@@ -117,4 +128,5 @@ def load_settings(path: Path | str | None = None) -> Settings:
         risk=RiskConfig(**raw["risk"]),
         revenue=RevenueConfig(**raw["revenue"]),
         operating=OperatingConfig(**raw["operating"]),
+        actions=ActionsConfig(**raw["actions"]),
     )

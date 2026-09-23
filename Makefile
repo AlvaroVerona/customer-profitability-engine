@@ -1,4 +1,4 @@
-.PHONY: install test generate-data quality features profitability econometrics models clv segmentation optimize app lint
+.PHONY: install test generate-data quality features profitability econometrics models clv segmentation actions optimize app lint
 
 install:
 	uv sync --extra dev
@@ -30,6 +30,9 @@ clv:
 
 segmentation:
 	uv run python -m customer_profitability.segmentation.report
+
+actions:
+	uv run python -m customer_profitability.actions.definitions
 
 optimize:
 	uv run python -c "print('Phase 11 not implemented yet')"

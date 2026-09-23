@@ -17,9 +17,11 @@ from customer_profitability.models.evaluation import fit_and_evaluate_classifica
 ADOPTION_PRODUCTS = ["savings_account", "consumer_loan", "investment_account"]
 
 
-def _ownership_flags(accounts: pd.DataFrame, product: str, df: pd.DataFrame) -> pd.Series:
+def ownership_flags(accounts: pd.DataFrame, product: str, df: pd.DataFrame) -> pd.Series:
     """Boolean Series, same length/order as `df`: does this customer own
-    `product` as of this row's month?"""
+    `product` as of this row's month? Public because Phase 9's action
+    eligibility rules (`actions.definitions`) need the exact same
+    derivation to know which products a customer doesn't yet hold."""
     prod_accounts = accounts.loc[
         accounts["product"] == product, ["customer_id", "account_open_date", "account_close_date"]
     ]
@@ -33,7 +35,7 @@ def _ownership_flags(accounts: pd.DataFrame, product: str, df: pd.DataFrame) -> 
 
 def build_adoption_dataset(customer_360: pd.DataFrame, accounts: pd.DataFrame, product: str) -> pd.DataFrame:
     df = customer_360.sort_values(["customer_id", "month"]).reset_index(drop=True).copy()
-    df["has_product"] = _ownership_flags(accounts, product, df).to_numpy()
+    df["has_product"] = ownership_flags(accounts, product, df).to_numpy()
     df["has_product_next_month"] = df.groupby("customer_id")["has_product"].shift(-1)
 
     eligible = df[(~df["has_product"]) & df["has_product_next_month"].notna()].copy()
