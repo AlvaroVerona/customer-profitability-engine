@@ -9,13 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 4 (historical
-> profitability engine) are complete.** Everything from Phase 5 onward
-> (econometrics, ML, CLV, segmentation, action simulation, optimization,
-> dashboard) is not yet implemented. This README will be replaced by the
-> full portfolio-quality version in Phase 18, once those results actually
-> exist — nothing below is a business finding, only a description of what
-> runs today.
+> **Status: Phase 0 (project setup) through Phase 5 (econometric analysis)
+> are complete.** Everything from Phase 6 onward (ML, CLV, segmentation,
+> action simulation, optimization, dashboard) is not yet implemented. This
+> README will be replaced by the full portfolio-quality version in Phase
+> 18, once those results actually exist — nothing below is a business
+> finding, only a description of what runs today.
 
 ## What exists today
 
@@ -58,16 +57,33 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   On the full synthetic portfolio: 94.3% of customers are profitable,
   total economic profit ≈ 11.3M, ranked Premium > Affluent > Mass > Student
   as expected from the underlying income/balance correlations.
-- 45 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 5 Econometric Analysis (`src/customer_profitability/econometrics/`):
+  an OLS revenue-drivers model (`total_revenue ~ average_balance + transaction_count
+  + product_count + income`, fit with HC3 heteroskedasticity-robust standard
+  errors after `diagnostics.breusch_pagan_test` confirmed heteroskedasticity)
+  and a logistic churn-drivers model (`P(churn) ~ rate_gap + activity + tenure
+  + profitability`). Both are deliberately *explanatory* (same-month
+  regressors, not lagged) -- they exist to recover and interpret the
+  synthetic churn/revenue generating mechanism, not to forecast; Phase 6
+  builds the point-in-time-correct predictive models. `diagnostics.py`
+  provides VIF, residual normality, Breusch-Pagan, and goodness-of-fit
+  shared across both models, plus `flag_economic_significance`, which keeps
+  "statistically significant" (p < 0.05) and "economically significant"
+  (effect size vs. an analyst-set threshold) as separate columns rather than
+  conflating them. On the full data: the churn model correctly recovers
+  every driver's true sign from the Phase 1 generating mechanism (wider
+  rate gap → higher churn odds; more activity/tenure/profitability → lower),
+  all VIFs < 5. Output at `reports/econometrics_report.{md,json}`.
+- 55 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
-  `tests/test_profitability.py`) covering reproducibility, financial
-  validity, temporal/referential integrity, correlation structure, every
-  quality-engine check against hand-crafted defective rows, the feature
-  pipeline's NaN-propagation and no-leakage guarantees, and every
-  profitability formula against hand-calculated examples (interest
-  revenue, interchange revenue, FTP/deposit contribution, expected loss,
-  operating cost, and the full economic-profit waterfall).
+  `tests/test_profitability.py`, `tests/test_econometrics.py`) covering
+  reproducibility, financial validity, temporal/referential integrity,
+  correlation structure, every quality-engine check against hand-crafted
+  defective rows, the feature pipeline's NaN-propagation and no-leakage
+  guarantees, every profitability formula against hand-calculated
+  examples, and both econometric models' ability to recover *known* true
+  coefficients from simulated data.
 
 ## Reproducibility
 
@@ -77,6 +93,7 @@ make generate-data    # regenerate data/raw/*.parquet (seed 42)
 make quality           # run the data quality engine -> data/processed/, reports/
 make features           # build Customer 360 -> data/features/customer_360.parquet
 make profitability      # run the profitability engine -> data/processed/profitability_*.parquet
+make econometrics       # fit revenue/churn driver models -> reports/econometrics_report.{md,json}
 make test              # run the test suite
 ```
 
@@ -96,7 +113,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,utils}/`, `tests/`.
 
 ## Tech stack
 

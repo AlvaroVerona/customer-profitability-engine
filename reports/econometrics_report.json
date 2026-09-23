@@ -1,0 +1,163 @@
+{
+  "revenue": {
+    "n_obs": 384183,
+    "goodness_of_fit": {
+      "r_squared": 0.20689430508227147,
+      "adj_r_squared": 0.20688604739239946,
+      "aic": 4108760.9834105736,
+      "bic": 4108815.2777819764,
+      "n_obs": 384183
+    },
+    "breusch_pagan": {
+      "lm_statistic": 25431.39506950825,
+      "lm_pvalue": 0.0,
+      "f_statistic": 6808.459084738114,
+      "f_pvalue": 0.0,
+      "heteroskedastic_p05": true
+    },
+    "residual_normality": {
+      "jarque_bera_stat": 2531384.0564826154,
+      "jarque_bera_pvalue": 0.0,
+      "skew": 2.7574989528286884,
+      "kurtosis": 14.301368938128403
+    },
+    "coefficients": {
+      "const": {
+        "coef": -54.176996753,
+        "std_err": 0.2935111194,
+        "statistic": -184.58243377,
+        "p_value": 0.0,
+        "ci_lower": -54.752267976,
+        "ci_upper": -53.6017255299,
+        "significant_p05": true,
+        "economic_threshold": null,
+        "economically_significant": false
+      },
+      "average_balance": {
+        "coef": -0.000136028,
+        "std_err": 2.28186e-05,
+        "statistic": -5.9612722004,
+        "p_value": 2.5e-09,
+        "ci_lower": -0.0001807517,
+        "ci_upper": -9.13044e-05,
+        "significant_p05": true,
+        "economic_threshold": 0.01,
+        "economically_significant": false
+      },
+      "transaction_count": {
+        "coef": 0.1448988107,
+        "std_err": 0.0229299172,
+        "statistic": 6.3192034103,
+        "p_value": 3e-10,
+        "ci_lower": 0.0999569989,
+        "ci_upper": 0.1898406225,
+        "significant_p05": true,
+        "economic_threshold": 0.5,
+        "economically_significant": false
+      },
+      "product_count": {
+        "coef": 15.4407603252,
+        "std_err": 0.0829294569,
+        "statistic": 186.1915043412,
+        "p_value": 0.0,
+        "ci_lower": 15.2782215765,
+        "ci_upper": 15.6032990739,
+        "significant_p05": true,
+        "economic_threshold": 1.0,
+        "economically_significant": true
+      },
+      "income": {
+        "coef": 0.0004554202,
+        "std_err": 8.66e-06,
+        "statistic": 52.5886399143,
+        "p_value": 0.0,
+        "ci_lower": 0.0004384468,
+        "ci_upper": 0.0004723936,
+        "significant_p05": true,
+        "economic_threshold": 0.0005,
+        "economically_significant": false
+      }
+    },
+    "vif": {
+      "average_balance": 2.503051565,
+      "transaction_count": 2.8801384609,
+      "product_count": 1.295299851,
+      "income": 4.5727975577
+    }
+  },
+  "churn": {
+    "n_obs": 384306,
+    "churn_rate": 0.018951044219970545,
+    "goodness_of_fit": {
+      "pseudo_r_squared_mcfadden": 0.05946181568998177,
+      "log_likelihood": -33950.76861970937,
+      "log_likelihood_null": -36097.17200861522,
+      "aic": 67911.53723941874,
+      "bic": 67965.83321136491,
+      "n_obs": 384306
+    },
+    "coefficients": {
+      "const": {
+        "coef": -2.650969066,
+        "std_err": 0.091444877,
+        "statistic": -28.9898040651,
+        "p_value": 8.845867689e-185,
+        "ci_lower": -2.8301977315,
+        "ci_upper": -2.4717404006,
+        "significant_p05": true,
+        "economic_threshold": null,
+        "economically_significant": false
+      },
+      "rate_gap": {
+        "coef": 0.377969232,
+        "std_err": 0.0359068726,
+        "statistic": 10.5263757074,
+        "p_value": 6.530048819e-26,
+        "ci_lower": 0.3075930548,
+        "ci_upper": 0.4483454091,
+        "significant_p05": true,
+        "economic_threshold": 0.05,
+        "economically_significant": true
+      },
+      "activity": {
+        "coef": -0.0737671788,
+        "std_err": 0.0032453513,
+        "statistic": -22.730106014,
+        "p_value": 2.25789509e-114,
+        "ci_lower": -0.0801279504,
+        "ci_upper": -0.0674064071,
+        "significant_p05": true,
+        "economic_threshold": 0.02,
+        "economically_significant": true
+      },
+      "tenure": {
+        "coef": -0.0184755257,
+        "std_err": 0.0005658131,
+        "statistic": -32.6530549187,
+        "p_value": 7.251791387e-234,
+        "ci_lower": -0.019584499,
+        "ci_upper": -0.0173665524,
+        "significant_p05": true,
+        "economic_threshold": 0.01,
+        "economically_significant": true
+      },
+      "profitability": {
+        "coef": -0.0066599647,
+        "std_err": 0.0006112585,
+        "statistic": -10.8954958381,
+        "p_value": 1.211051003e-27,
+        "ci_lower": -0.0078580094,
+        "ci_upper": -0.00546192,
+        "significant_p05": true,
+        "economic_threshold": 0.001,
+        "economically_significant": true
+      }
+    },
+    "vif": {
+      "rate_gap": 1.9518599314,
+      "activity": 1.8855775591,
+      "tenure": 1.0977997535,
+      "profitability": 1.3389944198
+    }
+  }
+}

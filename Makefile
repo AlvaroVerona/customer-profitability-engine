@@ -1,4 +1,4 @@
-.PHONY: install test generate-data quality features profitability models clv optimize app lint
+.PHONY: install test generate-data quality features profitability econometrics models clv optimize app lint
 
 install:
 	uv sync --extra dev
@@ -18,6 +18,9 @@ features:
 
 profitability:
 	uv run python -m customer_profitability.profitability.engine
+
+econometrics:
+	uv run python -m customer_profitability.econometrics.report
 
 models:
 	uv run python -c "print('Phase 6 not implemented yet')"
