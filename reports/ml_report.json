@@ -1,0 +1,646 @@
+{
+  "churn": {
+    "champion": "random_forest",
+    "n_features": 23,
+    "models": {
+      "logistic_regression": {
+        "test_metrics": {
+          "roc_auc": 0.7455823872454327,
+          "pr_auc": 0.06601736724230553,
+          "precision_at_0.5": 0.04507009162816195,
+          "recall_at_0.5": 0.708743842364532,
+          "brier_score": 0.2083167173229035,
+          "base_rate": 0.022209761901505722,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "roc_auc": 0.7343187705532608,
+          "pr_auc": 0.057372169488307416,
+          "precision_at_0.5": 0.039457882998799106,
+          "recall_at_0.5": 0.6865671641791045,
+          "brier_score": 0.2045567837390807,
+          "base_rate": 0.019447911526515923,
+          "n": 34451
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.7455823872454327,
+          "pr_auc": 0.06601736724230553,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.021244896820504035,
+          "base_rate": 0.022209761901505722,
+          "n": 73121
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "roc_auc": 0.7466798875642653,
+          "pr_auc": 0.06844831704304351,
+          "precision_at_0.5": 0.046613098323829275,
+          "recall_at_0.5": 0.6644088669950738,
+          "brier_score": 0.20093355527981213,
+          "base_rate": 0.022209761901505722,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "roc_auc": 0.7356124413308374,
+          "pr_auc": 0.059723803949770116,
+          "precision_at_0.5": 0.040835353347007275,
+          "recall_at_0.5": 0.6537313432835821,
+          "brier_score": 0.19814775284639197,
+          "base_rate": 0.019447911526515923,
+          "n": 34451
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.7466798875642653,
+          "pr_auc": 0.06844831704304351,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.02121225028255087,
+          "base_rate": 0.022209761901505722,
+          "n": 73121
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "roc_auc": 0.7411897893197628,
+          "pr_auc": 0.06758985718797744,
+          "precision_at_0.5": 0.04973330699328329,
+          "recall_at_0.5": 0.6200738916256158,
+          "brier_score": 0.17659969627857208,
+          "base_rate": 0.022209761901505722,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "roc_auc": 0.7196630447124964,
+          "pr_auc": 0.05735527702522853,
+          "precision_at_0.5": 0.041621386655074984,
+          "recall_at_0.5": 0.5716417910447761,
+          "brier_score": 0.17299145460128784,
+          "base_rate": 0.019447911526515923,
+          "n": 34451
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.7411897893197628,
+          "pr_auc": 0.06758985718797744,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.021244524199586407,
+          "base_rate": 0.022209761901505722,
+          "n": 73121
+        }
+      }
+    }
+  },
+  "revenue": {
+    "champion": "xgboost",
+    "n_features": 23,
+    "models": {
+      "linear_regression": {
+        "test_metrics": {
+          "mae": 8.501598448296962,
+          "rmse": 22.36562340425646,
+          "mape": 0.7489828240985673,
+          "r_squared": 0.8644992974082365,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "mae": 7.5402307028066,
+          "rmse": 18.531020255737005,
+          "mape": 0.7571630897030639,
+          "r_squared": 0.9006254053852556,
+          "n": 34451
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "mae": 7.598551821162349,
+          "rmse": 21.356418812798363,
+          "mape": 0.49916462776821463,
+          "r_squared": 0.8764518094043073,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "mae": 6.550170758776411,
+          "rmse": 17.042140795661034,
+          "mape": 0.5017425285641403,
+          "r_squared": 0.9159524600259177,
+          "n": 34451
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "mae": 7.482228179689239,
+          "rmse": 21.146779770545795,
+          "mape": 0.5209343413961317,
+          "r_squared": 0.8788654539494434,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "mae": 6.33959733241633,
+          "rmse": 16.40022043095603,
+          "mape": 0.5157141724107831,
+          "r_squared": 0.9221647940074734,
+          "n": 34451
+        }
+      }
+    }
+  },
+  "deposit_balance": {
+    "champion": "random_forest",
+    "n_features": 23,
+    "models": {
+      "linear_regression": {
+        "test_metrics": {
+          "mae": 817.7222254903423,
+          "rmse": 10110.316861662113,
+          "mape": 0.7861871593441733,
+          "r_squared": -0.737620488031475,
+          "n": 72405
+        },
+        "validation_metrics": {
+          "mae": 773.5640651693618,
+          "rmse": 1605.9201994377274,
+          "mape": 0.135251488482388,
+          "r_squared": 0.9592821243757838,
+          "n": 34071
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "mae": 626.7698695712953,
+          "rmse": 1052.4880671051544,
+          "mape": 0.15635838935837776,
+          "r_squared": 0.981169590861515,
+          "n": 72405
+        },
+        "validation_metrics": {
+          "mae": 618.9438440017937,
+          "rmse": 1032.1387442573418,
+          "mape": 0.08194387687829913,
+          "r_squared": 0.9831804895267254,
+          "n": 34071
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "mae": 637.1414952182947,
+          "rmse": 1112.910362601288,
+          "mape": 0.2498147186851292,
+          "r_squared": 0.9789454595044842,
+          "n": 72405
+        },
+        "validation_metrics": {
+          "mae": 625.211242539445,
+          "rmse": 1069.3087714643045,
+          "mape": 0.08694615618004307,
+          "r_squared": 0.9819472466467013,
+          "n": 34071
+        }
+      }
+    }
+  },
+  "loan_balance": {
+    "champion": "linear_regression",
+    "n_features": 23,
+    "models": {
+      "linear_regression": {
+        "test_metrics": {
+          "mae": 1071.5067395952494,
+          "rmse": 2120.9991629164115,
+          "mape": 0.16277578184859168,
+          "r_squared": 0.958152805281005,
+          "n": 19677
+        },
+        "validation_metrics": {
+          "mae": 1039.2979971086459,
+          "rmse": 2082.1791747714224,
+          "mape": 0.15928523721825866,
+          "r_squared": 0.9583140711060402,
+          "n": 9254
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "mae": 1084.1687949007032,
+          "rmse": 2127.1138685249475,
+          "mape": 0.17196914469293875,
+          "r_squared": 0.9579111718769653,
+          "n": 19677
+        },
+        "validation_metrics": {
+          "mae": 1053.2852837086675,
+          "rmse": 2091.51831252701,
+          "mape": 0.16957881230086186,
+          "r_squared": 0.9579392871114906,
+          "n": 9254
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "mae": 1149.0562432026409,
+          "rmse": 2235.480625655046,
+          "mape": 0.18044023191257955,
+          "r_squared": 0.9535134649885464,
+          "n": 19677
+        },
+        "validation_metrics": {
+          "mae": 1087.360353268294,
+          "rmse": 2135.8508709713196,
+          "mape": 0.17510291780496176,
+          "r_squared": 0.956137322495183,
+          "n": 9254
+        }
+      }
+    }
+  },
+  "transaction_volume": {
+    "champion": "random_forest",
+    "n_features": 23,
+    "models": {
+      "linear_regression": {
+        "test_metrics": {
+          "mae": 296.02526284489966,
+          "rmse": 435.3755916525841,
+          "mape": 0.5120943302192158,
+          "r_squared": 0.6862826171984229,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "mae": 293.404360903638,
+          "rmse": 432.58910078203536,
+          "mape": 0.5149695966413773,
+          "r_squared": 0.6861274762303551,
+          "n": 34451
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "mae": 271.7606945533014,
+          "rmse": 415.98643961537164,
+          "mape": 0.40158102048714733,
+          "r_squared": 0.7136027950238063,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "mae": 270.11373276462086,
+          "rmse": 414.1842264067815,
+          "mape": 0.40433868944657175,
+          "r_squared": 0.712267271414204,
+          "n": 34451
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "mae": 273.2930016049301,
+          "rmse": 418.42508418670974,
+          "mape": 0.40073270267897537,
+          "r_squared": 0.7102350498031131,
+          "n": 73121
+        },
+        "validation_metrics": {
+          "mae": 270.9882930093739,
+          "rmse": 415.5402740339997,
+          "mape": 0.4042092806542109,
+          "r_squared": 0.710380101471787,
+          "n": 34451
+        }
+      }
+    }
+  },
+  "adoption_savings_account": {
+    "champion": "random_forest",
+    "n_features": 23,
+    "models": {
+      "logistic_regression": {
+        "test_metrics": {
+          "roc_auc": 0.8271825351574434,
+          "pr_auc": 0.0586274937031675,
+          "precision_at_0.5": 0.04476942400861295,
+          "recall_at_0.5": 0.855917667238422,
+          "brier_score": 0.2034813691597726,
+          "base_rate": 0.017351190476190475,
+          "n": 33600
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8400686773973297,
+          "pr_auc": 0.06446410306545543,
+          "precision_at_0.5": 0.04525691699604743,
+          "recall_at_0.5": 0.8576779026217228,
+          "brier_score": 0.1978923149744119,
+          "base_rate": 0.016856060606060607,
+          "n": 15840
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8271825351574434,
+          "pr_auc": 0.0586274937031675,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.016723273959156692,
+          "base_rate": 0.017351190476190475,
+          "n": 33600
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "roc_auc": 0.8286952441101734,
+          "pr_auc": 0.058360577206032334,
+          "precision_at_0.5": 0.041776289563900185,
+          "recall_at_0.5": 0.8987993138936535,
+          "brier_score": 0.1847747921328031,
+          "base_rate": 0.017351190476190475,
+          "n": 33600
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8362889674364373,
+          "pr_auc": 0.06798756050659208,
+          "precision_at_0.5": 0.04209049456331112,
+          "recall_at_0.5": 0.898876404494382,
+          "brier_score": 0.17994564421576534,
+          "base_rate": 0.016856060606060607,
+          "n": 15840
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8286952441101734,
+          "pr_auc": 0.058360577206032334,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.016609056134015806,
+          "base_rate": 0.017351190476190475,
+          "n": 33600
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "roc_auc": 0.8184935241271573,
+          "pr_auc": 0.055004545591154155,
+          "precision_at_0.5": 0.04643828167482327,
+          "recall_at_0.5": 0.7324185248713551,
+          "brier_score": 0.1501035839319229,
+          "base_rate": 0.017351190476190475,
+          "n": 33600
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8181340459851885,
+          "pr_auc": 0.05529139015862311,
+          "precision_at_0.5": 0.04584323040380048,
+          "recall_at_0.5": 0.7228464419475655,
+          "brier_score": 0.14599566161632538,
+          "base_rate": 0.016856060606060607,
+          "n": 15840
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8184935241271573,
+          "pr_auc": 0.055004545591154155,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.016665883268219727,
+          "base_rate": 0.017351190476190475,
+          "n": 33600
+        }
+      }
+    }
+  },
+  "adoption_consumer_loan": {
+    "champion": "logistic_regression",
+    "n_features": 23,
+    "models": {
+      "logistic_regression": {
+        "test_metrics": {
+          "roc_auc": 0.88403069816631,
+          "pr_auc": 0.05161843613051596,
+          "precision_at_0.5": 0.024134237772224204,
+          "recall_at_0.5": 0.8556962025316456,
+          "brier_score": 0.1707655972843745,
+          "base_rate": 0.007417701076036131,
+          "n": 53251
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8699874170211057,
+          "pr_auc": 0.04360284888466697,
+          "precision_at_0.5": 0.024253731343283583,
+          "recall_at_0.5": 0.8297872340425532,
+          "brier_score": 0.1660323903950851,
+          "base_rate": 0.007491532177724646,
+          "n": 25095
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.88403069816631,
+          "pr_auc": 0.05161843613051596,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.007168700249058438,
+          "base_rate": 0.007417701076036131,
+          "n": 53251
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "roc_auc": 0.8706264261341538,
+          "pr_auc": 0.04332890138926036,
+          "precision_at_0.5": 0.025003765627353517,
+          "recall_at_0.5": 0.8405063291139241,
+          "brier_score": 0.1493991923251834,
+          "base_rate": 0.007417701076036131,
+          "n": 53251
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8617743110754988,
+          "pr_auc": 0.03877603785325245,
+          "precision_at_0.5": 0.025161397119682172,
+          "recall_at_0.5": 0.8085106382978723,
+          "brier_score": 0.14494925403090494,
+          "base_rate": 0.007491532177724646,
+          "n": 25095
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8706264261341538,
+          "pr_auc": 0.04332890138926036,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.0072028998514105415,
+          "base_rate": 0.007417701076036131,
+          "n": 53251
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "roc_auc": 0.8596648788300861,
+          "pr_auc": 0.04166660866014812,
+          "precision_at_0.5": 0.02930672268907563,
+          "recall_at_0.5": 0.7063291139240506,
+          "brier_score": 0.10941486805677414,
+          "base_rate": 0.007417701076036131,
+          "n": 53251
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8482253984823543,
+          "pr_auc": 0.03810317300068788,
+          "precision_at_0.5": 0.027591003941571993,
+          "recall_at_0.5": 0.6329787234042553,
+          "brier_score": 0.10569274425506592,
+          "base_rate": 0.007491532177724646,
+          "n": 25095
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8596648788300861,
+          "pr_auc": 0.04166660866014812,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.007226886763575883,
+          "base_rate": 0.007417701076036131,
+          "n": 53251
+        }
+      }
+    }
+  },
+  "adoption_investment_account": {
+    "champion": "logistic_regression",
+    "n_features": 23,
+    "models": {
+      "logistic_regression": {
+        "test_metrics": {
+          "roc_auc": 0.8693634399933523,
+          "pr_auc": 0.054895753903927855,
+          "precision_at_0.5": 0.03535679690022603,
+          "recall_at_0.5": 0.8439306358381503,
+          "brier_score": 0.1759387125256302,
+          "base_rate": 0.010927005916163126,
+          "n": 47497
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8838573373336587,
+          "pr_auc": 0.05622291747037618,
+          "precision_at_0.5": 0.03600139811254806,
+          "recall_at_0.5": 0.8917748917748918,
+          "brier_score": 0.17166415338640606,
+          "base_rate": 0.010301462718515876,
+          "n": 22424
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8693634399933523,
+          "pr_auc": 0.054895753903927855,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.010589995270927749,
+          "base_rate": 0.010927005916163126,
+          "n": 47497
+        }
+      },
+      "random_forest": {
+        "test_metrics": {
+          "roc_auc": 0.8588173236666923,
+          "pr_auc": 0.052176983707695385,
+          "precision_at_0.5": 0.0355989734249524,
+          "recall_at_0.5": 0.8285163776493256,
+          "brier_score": 0.15645542232896617,
+          "base_rate": 0.010927005916163126,
+          "n": 47497
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8741906646200794,
+          "pr_auc": 0.05117062905441078,
+          "precision_at_0.5": 0.03511286277319957,
+          "recall_at_0.5": 0.8484848484848485,
+          "brier_score": 0.15205214611335108,
+          "base_rate": 0.010301462718515876,
+          "n": 22424
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8588173236666923,
+          "pr_auc": 0.052176983707695385,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.010520342672427293,
+          "base_rate": 0.010927005916163126,
+          "n": 47497
+        }
+      },
+      "xgboost": {
+        "test_metrics": {
+          "roc_auc": 0.8530280356705319,
+          "pr_auc": 0.05321945532344359,
+          "precision_at_0.5": 0.03989010989010989,
+          "recall_at_0.5": 0.6994219653179191,
+          "brier_score": 0.1186482235789299,
+          "base_rate": 0.010927005916163126,
+          "n": 47497
+        },
+        "validation_metrics": {
+          "roc_auc": 0.8682865370559687,
+          "pr_auc": 0.0547562183885482,
+          "precision_at_0.5": 0.03992349988046856,
+          "recall_at_0.5": 0.7229437229437229,
+          "brier_score": 0.11531521379947662,
+          "base_rate": 0.010301462718515876,
+          "n": 22424
+        },
+        "test_metrics_calibrated": {
+          "roc_auc": 0.8530280356705319,
+          "pr_auc": 0.05321945532344359,
+          "precision_at_0.5": 0.0,
+          "recall_at_0.5": 0.0,
+          "brier_score": 0.01054715261227323,
+          "base_rate": 0.010927005916163126,
+          "n": 47497
+        }
+      }
+    }
+  },
+  "explainability": {
+    "churn": {
+      "champion": "random_forest",
+      "global_importance": {
+        "tenure_months": 0.07676138908761328,
+        "login_frequency": 0.041678257809563614,
+        "average_balance": 0.03431833507271634,
+        "income": 0.020360166596674313,
+        "transaction_volume": 0.016241149228907337,
+        "rate_differential": 0.013409334824095048,
+        "atm_usage_share": 0.01101915167308808,
+        "transaction_count": 0.008790782643925058,
+        "average_transaction_value": 0.0056584009168466655,
+        "balance_growth_1m": 0.005468833697195259
+      },
+      "example_customer_explanation": {
+        "tenure_months": 0.06819624907999182,
+        "income": -0.054355437505012476,
+        "atm_usage_share": -0.034603624014500574,
+        "transaction_volume": -0.01986756352858784,
+        "rate_differential": -0.017163621632292323,
+        "average_transaction_value": -0.015289782520239579,
+        "outstanding_balance": -0.014973128058030903,
+        "login_frequency": 0.014449239315553801,
+        "balance_growth_1m": 0.013132317172074323,
+        "balance_volatility_3m": -0.012266374577101804
+      }
+    },
+    "revenue": {
+      "champion": "xgboost",
+      "global_importance": {
+        "outstanding_balance": 32.173789978027344,
+        "expected_loss": 6.823140621185303,
+        "income": 3.6238622665405273,
+        "customer_segment_Premium": 2.9326162338256836,
+        "utilization": 1.704939842224121,
+        "atm_usage_share": 1.2632899284362793,
+        "product_count": 1.018690824508667,
+        "login_frequency": 0.613005518913269,
+        "tenure_months": 0.5548936724662781,
+        "age": 0.3848353922367096
+      },
+      "example_customer_explanation": {
+        "outstanding_balance": 92.89456176757812,
+        "expected_loss": 11.391510009765625,
+        "utilization": -6.806293487548828,
+        "atm_usage_share": 6.278796195983887,
+        "customer_segment_Premium": -1.2517837285995483,
+        "income": -1.2360966205596924,
+        "product_count": 0.5779496431350708,
+        "tenure_months": 0.5725609660148621,
+        "login_frequency": -0.419873982667923,
+        "age": -0.3848643898963928
+      }
+    }
+  }
+}

@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 5 (econometric analysis)
-> are complete.** Everything from Phase 6 onward (ML, CLV, segmentation,
-> action simulation, optimization, dashboard) is not yet implemented. This
-> README will be replaced by the full portfolio-quality version in Phase
-> 18, once those results actually exist — nothing below is a business
-> finding, only a description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 6 (machine learning) are
+> complete.** Everything from Phase 7 onward (CLV, segmentation, action
+> simulation, optimization, dashboard) is not yet implemented. This README
+> will be replaced by the full portfolio-quality version in Phase 18, once
+> those results actually exist — nothing below is a business finding, only
+> a description of what runs today.
 
 ## What exists today
 
@@ -74,16 +74,38 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   every driver's true sign from the Phase 1 generating mechanism (wider
   rate gap → higher churn odds; more activity/tenure/profitability → lower),
   all VIFs < 5. Output at `reports/econometrics_report.{md,json}`.
-- 55 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 6 Machine Learning suite (`src/customer_profitability/models/`):
+  churn (`P(Churn_{t+1}=1)`), future revenue, three balance/activity targets
+  (deposit balance, loan balance, transaction volume), and three product-
+  adoption models (savings, consumer loan, investment) -- every target
+  built by forward-shifting the label one month within each customer's
+  series (features at t predict the outcome at t+1; a customer's last
+  observed row, churn month or not, is dropped since its future is
+  genuinely unknown), and every classification/regression target compared
+  across a baseline (logistic/linear regression) and two tree ensembles
+  (random forest, XGBoost) on a calendar-based train/validation/test split
+  (`models.evaluation.time_based_split`, driven by `config.models`).
+  Churn probabilities are additionally post-hoc Platt-scaled
+  (`calibrate_probabilities`) after the raw class-rebalanced models turned
+  out well-ranked (ROC-AUC ~0.75) but badly miscalibrated in absolute terms
+  (Brier score 0.20 raw -> 0.02 calibrated) -- exactly the failure mode
+  PROJECT_SPEC.md 6.1 flags as consequential for Phase 7's CLV survival
+  term. SHAP (`TreeExplainer`) provides global feature importance and a
+  per-customer explanation for the churn and revenue champions; on the
+  full data, churn's top SHAP driver is `tenure_months`, matching the
+  Phase 1 generating mechanism. Output at `reports/ml_report.{md,json}`.
+- 69 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
-  `tests/test_profitability.py`, `tests/test_econometrics.py`) covering
-  reproducibility, financial validity, temporal/referential integrity,
-  correlation structure, every quality-engine check against hand-crafted
-  defective rows, the feature pipeline's NaN-propagation and no-leakage
-  guarantees, every profitability formula against hand-calculated
-  examples, and both econometric models' ability to recover *known* true
-  coefficients from simulated data.
+  `tests/test_profitability.py`, `tests/test_econometrics.py`,
+  `tests/test_models.py`) covering reproducibility, financial validity,
+  temporal/referential integrity, correlation structure, every
+  quality-engine check against hand-crafted defective rows, the feature
+  pipeline's NaN-propagation and no-leakage guarantees, every
+  profitability formula against hand-calculated examples, both
+  econometric models' ability to recover *known* true coefficients from
+  simulated data, and every Phase 6 target's forward-shift/eligibility
+  logic, time-based split boundaries, and calibration.
 
 ## Reproducibility
 
@@ -94,6 +116,7 @@ make quality           # run the data quality engine -> data/processed/, reports
 make features           # build Customer 360 -> data/features/customer_360.parquet
 make profitability      # run the profitability engine -> data/processed/profitability_*.parquet
 make econometrics       # fit revenue/churn driver models -> reports/econometrics_report.{md,json}
+make models             # fit all Phase 6 models -> reports/ml_report.{md,json}
 make test              # run the test suite
 ```
 
@@ -113,7 +136,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,utils}/`, `tests/`.
 
 ## Tech stack
 

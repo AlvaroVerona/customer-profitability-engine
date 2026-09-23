@@ -23,7 +23,7 @@ econometrics:
 	uv run python -m customer_profitability.econometrics.report
 
 models:
-	uv run python -c "print('Phase 6 not implemented yet')"
+	uv run python -m customer_profitability.models.report
 
 clv:
 	uv run python -c "print('Phase 7 not implemented yet')"
