@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 16 (Testing) are
-> complete.** Everything from Phase 17 onward (final report, README
-> polish) is not yet implemented. This README will be replaced by the
-> full portfolio-quality version in Phase 18, once those results actually
-> exist — nothing below is a business finding, only a description of what
-> runs today.
+> **Status: Phase 0 (project setup) through Phase 17 (Final Report) are
+> complete.** Only Phase 18 (README polish) remains. This README will be
+> replaced by the full portfolio-quality version in that phase — nothing
+> below is a business finding, only a description of what runs today.
+> See [`reports/final_report.md`](reports/final_report.md) for the actual
+> portfolio-quality narrative and findings.
 
 ## What exists today
 
@@ -351,6 +351,17 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   customer with no eligible candidates (only `NO_ACTION`) were untested
   -- the CP-SAT model was never actually verified not to select anything
   under either zero constraint.
+- Phase 17 Final Report (`reporting/final_report.py`,
+  [`reports/final_report.md`](reports/final_report.md)): assembles the
+  spec's 8-section portfolio deliverable (Executive Summary, Customer
+  Economics, Risk-Adjusted Profitability, CLV, Segmentation, Action
+  Optimization, Scenario Analysis, Limitations) purely by reading the
+  JSON reports and processed parquet tables every earlier phase already
+  wrote to disk -- no number in it is computed, estimated, or fabricated
+  for the document itself. Closed a real gap found while wiring its
+  Makefile target: Phase 14's `governance` target had been declared in
+  `.PHONY` but its actual recipe was never added, so `make governance`
+  silently did nothing.
 - 159 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
@@ -405,6 +416,7 @@ make optimize            # solve the budget/capacity/risk-constrained allocation
 make montecarlo          # scenario simulation (needs make optimize) -> reports/monte_carlo_report.{md,json}
 make app                 # launch the Streamlit dashboard (needs the full pipeline above to have run)
 make governance          # assemble the explainability/governance write-up -> reports/explainability_governance.md
+make final-report        # assemble the 8-section final report (needs the full pipeline above) -> reports/final_report.md
 make test              # run the test suite
 ```
 
@@ -424,7 +436,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `app/{pages,components}/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,simulation,governance,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `app/{pages,components}/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,simulation,governance,reporting,utils}/`, `tests/`.
 
 ## Tech stack
 
