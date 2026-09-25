@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 15 (Model Validation)
-> are complete.** Everything from Phase 16 onward (extensive testing
-> consolidation, final report, README polish) is not yet implemented.
-> This README will be replaced by the full portfolio-quality version in
-> Phase 18, once those results actually exist — nothing below is a
-> business finding, only a description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 16 (Testing) are
+> complete.** Everything from Phase 17 onward (final report, README
+> polish) is not yet implemented. This README will be replaced by the
+> full portfolio-quality version in Phase 18, once those results actually
+> exist — nothing below is a business finding, only a description of what
+> runs today.
 
 ## What exists today
 
@@ -340,7 +340,18 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   champion on 3 of 8 targets (`loan_balance`,
   `adoption_consumer_loan`, `adoption_investment_account`) rather than
   only showing cases where the tree ensembles win.
-- 154 passing unit tests (`tests/test_data_generation.py`,
+- Phase 16 Testing: audited the existing suite against
+  `PROJECT_SPEC.md`'s explicit "PHASE 16 -- Testing" checklist (data
+  schema/missing values/duplicates/temporal/referential integrity,
+  financial calculations, CLV, optimization) and closed the real gaps it
+  found -- `data/quality.py`'s structural check (missing/extra columns
+  vs. `schemas.TABLE_SCHEMAS`) and its missing-primary-key quarantine
+  rule were both computed and reported but had no test exercising them,
+  and the optimizer's zero-budget case, zero-capacity case, and a
+  customer with no eligible candidates (only `NO_ACTION`) were untested
+  -- the CP-SAT model was never actually verified not to select anything
+  under either zero constraint.
+- 159 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
@@ -372,7 +383,8 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   Phase 15's baseline-vs-champion uplift-direction logic (higher-is-better
   and lower-is-better metrics, a zero-baseline edge case, and the
   baseline-wins case) against a hand-built `ml_report.json`-shaped
-  fixture.
+  fixture, and Phase 16's schema/primary-key and zero-budget/
+  zero-capacity/ineligible-customer optimizer edge cases above.
 
 ## Reproducibility
 

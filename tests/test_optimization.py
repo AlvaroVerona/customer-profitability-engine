@@ -127,6 +127,61 @@ def test_solve_respects_risk_constraint() -> None:
     assert len(selected) == 1  # can't afford both (8+8=16 > 10)
 
 
+def test_solve_zero_budget_selects_nothing() -> None:
+    # Phase 16: the optimizer must never violate a zero-budget constraint --
+    # every candidate here has a positive cost, so none can be afforded.
+    constraints = OptimizationConstraints(budget=0, capacity=100, max_incremental_risk_monthly=1000, min_expected_roi=0.0)
+    selected, _solver, _status = solve(_two_customer_candidates(), constraints)
+    assert selected.empty
+    assert selected["expected_action_cost"].sum() <= 0.0 + 1e-6
+
+
+def test_solve_zero_capacity_selects_nothing() -> None:
+    # Phase 16: a zero operational-capacity constraint must select nothing,
+    # regardless of how profitable the candidates are.
+    constraints = OptimizationConstraints(budget=1000, capacity=0, max_incremental_risk_monthly=1000, min_expected_roi=0.0)
+    selected, _solver, _status = solve(_two_customer_candidates(), constraints)
+    assert selected.empty
+
+
+def test_ineligible_customer_with_no_real_candidates_never_selected() -> None:
+    # Phase 16 "ineligible customers": a customer whose only row is
+    # NO_ACTION (e.g. every real action was filtered by Phase 9 eligibility
+    # upstream) must produce zero optimizer candidates and end up with
+    # NO_ACTION in the final plan, never selected by the solver. Phase 9's
+    # own eligibility rules are covered directly in test_actions.py; this
+    # confirms the optimizer layer handles the resulting "no eligible
+    # action" case without error.
+    incremental_value = pd.concat(
+        [
+            _incremental_value_fixture(),
+            pd.DataFrame(
+                {
+                    "customer_id": ["C3"],
+                    "action_type": ["NO_ACTION"],
+                    "acceptance_probability": [1.0],
+                    "churn_reduction_pct": [0.0],
+                    "p_churn_monthly": [0.03],
+                    "additional_risk_monthly": [0.0],
+                    "delta_clv": [0.0],
+                    "expected_action_cost": [0.0],
+                    "incremental_profit": [0.0],
+                }
+            ),
+        ],
+        ignore_index=True,
+    )
+    constraints = OptimizationConstraints(budget=1000, capacity=100, max_incremental_risk_monthly=1000, min_expected_roi=0.0)
+    result = optimize(incremental_value, constraints)
+    assert "C3" not in set(result["candidates"]["customer_id"])
+    assert "C3" not in set(result["selected"]["customer_id"])
+
+    settings = small_settings()
+    plan = build_full_action_plan(incremental_value, result["selected"], settings)
+    c3_row = plan[plan["customer_id"] == "C3"].iloc[0]
+    assert c3_row["action_type"] == ActionType.NO_ACTION.value
+
+
 def test_optimize_end_to_end_and_counterfactual() -> None:
     incremental_value = _incremental_value_fixture()
     constraints = OptimizationConstraints(budget=1000, capacity=100, max_incremental_risk_monthly=1000, min_expected_roi=0.0)

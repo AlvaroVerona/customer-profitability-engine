@@ -153,6 +153,33 @@ def test_clean_row_is_validated_not_quarantined(tables: dict[str, pd.DataFrame])
     assert ((validated["deposits"]["customer_id"] == "C1") & (validated["deposits"]["month"] == "2023-01-01")).any()
 
 
+def test_detects_missing_and_extra_columns(tables: dict[str, pd.DataFrame]) -> None:
+    # Phase 16 "schema" coverage: _check_structural is computed and reported
+    # for every table but was previously untested. `market_rate` is dropped
+    # (rather than a column referenced by the financial/temporal checks)
+    # because those checks assume the documented schema and are not meant
+    # to be resilient to an arbitrarily malformed table -- that contract is
+    # exactly what this structural check itself exists to report.
+    broken = dict(tables)
+    broken["deposits"] = tables["deposits"].drop(columns=["market_rate"]).assign(unexpected_col=0)
+    report, _ = run_quality_checks(broken)
+    r = report.tables["deposits"]
+    assert r.missing_columns == ["market_rate"]
+    assert r.extra_columns == ["unexpected_col"]
+
+
+def test_missing_primary_key_component_is_quarantined(tables: dict[str, pd.DataFrame]) -> None:
+    # Phase 16 "schema" coverage: a row missing a primary-key component
+    # must be quarantined even if every other check passes.
+    broken = dict(tables)
+    deposits = tables["deposits"].copy()
+    deposits.loc[0, "product"] = None
+    broken["deposits"] = deposits
+    report, masks = run_quality_checks(broken)
+    assert report.tables["deposits"].missing_primary_key_count == 1
+    assert masks["deposits"].iloc[0]
+
+
 def test_expected_missing_churn_date_is_not_penalized(customers: pd.DataFrame) -> None:
     tables = {
         "customers": customers,
