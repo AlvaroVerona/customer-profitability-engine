@@ -8,9 +8,10 @@ from pathlib import Path
 import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from components.data_loader import get_settings, load_incremental_value
+from components.data_loader import get_settings, load_clv, load_incremental_value
 from components.tables import eur, pct
 
+from customer_profitability.actions.explanation import explain_customer_recommendation
 from customer_profitability.actions.incremental_value import recommend_action
 
 st.title("Actions")
@@ -50,3 +51,23 @@ if best["action_type"] != "NO_ACTION" and best["incremental_profit"] > 0:
     )
 else:
     st.info("No action beats NO_ACTION for this customer under current simulation assumptions.")
+
+st.divider()
+st.subheader("Decision explanation")
+st.caption(
+    "Phase 14's customer-level decision explanation -- every 'Why' line is a computed condition "
+    "against portfolio benchmarks (CLV/profit/churn percentile among active customers), not a "
+    "canned line shown for everyone."
+)
+clv = load_clv()
+explanation = explain_customer_recommendation(customer_id, incremental_value, clv, settings)
+st.markdown(f"**Recommended action:** {explanation.recommended_action}")
+st.markdown("**Why:**")
+for reason in explanation.why:
+    st.markdown(f"- {reason}")
+st.markdown("**Expected impact:**")
+st.markdown(
+    f"- Cost: {eur(explanation.cost)}\n"
+    f"- Incremental profit: {eur(explanation.incremental_profit)}\n"
+    f"- CLV impact: {eur(explanation.clv_impact)}"
+)

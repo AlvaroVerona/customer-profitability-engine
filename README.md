@@ -9,11 +9,11 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 13 (Streamlit
-> dashboard) are complete.** Everything from Phase 14 onward
-> (explainability/governance write-ups, final report) is not yet
-> implemented. This README will be replaced by the full portfolio-quality
-> version in Phase 18, once those results actually exist — nothing below
+> **Status: Phase 0 (project setup) through Phase 14 (Explainability &
+> Governance) are complete.** Everything from Phase 15 onward (model
+> validation consolidation, final report) is not yet implemented. This
+> README will be replaced by the full portfolio-quality version in Phase
+> 18, once those results actually exist — nothing below
 > is a business finding, only a description of what
 > runs today.
 
@@ -311,31 +311,52 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   carries its own copy of `customer_segment` from Phase 3) together with
   `customers_validated`'s copy would have silently produced
   `customer_segment_x`/`_y` instead of one unambiguous column.
-- 140 passing unit tests (`tests/test_data_generation.py`,
+- Phase 14 Explainability & Governance: a customer-level decision
+  explanation generator (`actions/explanation.py`) that states, for any
+  customer, *why* a specific action is recommended as computed conditions
+  against portfolio benchmarks (CLV/historical-profit/churn percentile
+  among active customers -- not canned text), plus an optimization
+  selection-rationale module (`optimization/explanation.py`) that reports
+  a candidate's rank among all ROI-pre-filtered candidates and whether it
+  cleared budget/capacity/risk headroom, explicitly documented as a
+  rank-based approximation rather than a literal CP-SAT solver trace. Both
+  are wired live into the Actions dashboard page and assembled into
+  `reports/explainability_governance.md` (`governance/report.py`), which
+  documents every stage's methodology (profitability waterfall, CLV
+  formula and simplifying assumptions, top SHAP churn drivers pulled live
+  from `reports/ml_report.json`, optimization selection rationale) plus
+  three worked customer examples pulled from the real pipeline output on
+  disk (a high-value customer, a typical one, and one of the only 3 of
+  12,651 active customers for whom no action beats doing nothing), and a
+  closing Responsible Decision-Making section per `PROJECT_SPEC.md` §26.
+- 147 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
   `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`,
   `tests/test_actions.py`, `tests/test_optimization.py`,
-  `tests/test_simulation.py`, `tests/test_dashboard_data.py`) covering
-  reproducibility, financial validity, temporal/referential integrity,
-  correlation structure, every quality-engine check against hand-crafted
-  defective rows, the feature pipeline's NaN-propagation and no-leakage
-  guarantees, every profitability formula against hand-calculated
-  examples, both econometric models' ability to recover *known* true
-  coefficients from simulated data, every Phase 6 target's forward-shift/
-  eligibility logic and calibration, Phase 7's discounting formulas
-  against both hand calculations and a large-sample Monte Carlo
-  cross-check, every Phase 8 labeling rule (including duplicate-name
-  disambiguation) against hand-built cluster centroids, every Phase 9
-  eligibility rule against hand-built customer/account scenarios, every
-  Phase 10 action effect formula against hand-calculated examples
-  (including that `NO_ACTION` nets to exactly zero), every Phase 11
-  constraint (one-per-customer, budget, capacity, risk) against small,
-  hand-solvable optimization instances, every Phase 12 scenario/
-  action-outcome formula (including the certain-acceptance closed-form
-  check that caught the division bug above), and Phase 13's dashboard
-  data-assembly logic against the real pipeline output on disk.
+  `tests/test_simulation.py`, `tests/test_dashboard_data.py`,
+  `tests/test_explanation.py`) covering reproducibility, financial
+  validity, temporal/referential integrity, correlation structure, every
+  quality-engine check against hand-crafted defective rows, the feature
+  pipeline's NaN-propagation and no-leakage guarantees, every
+  profitability formula against hand-calculated examples, both
+  econometric models' ability to recover *known* true coefficients from
+  simulated data, every Phase 6 target's forward-shift/eligibility logic
+  and calibration, Phase 7's discounting formulas against both hand
+  calculations and a large-sample Monte Carlo cross-check, every Phase 8
+  labeling rule (including duplicate-name disambiguation) against
+  hand-built cluster centroids, every Phase 9 eligibility rule against
+  hand-built customer/account scenarios, every Phase 10 action effect
+  formula against hand-calculated examples (including that `NO_ACTION`
+  nets to exactly zero), every Phase 11 constraint (one-per-customer,
+  budget, capacity, risk) against small, hand-solvable optimization
+  instances, every Phase 12 scenario/action-outcome formula (including the
+  certain-acceptance closed-form check that caught the division bug
+  above), Phase 13's dashboard data-assembly logic against the real
+  pipeline output on disk, and Phase 14's percentile-triggered explanation
+  bullets and selection-rank reasoning against hand-built fixtures
+  (selected / not-selected-with-candidates / no-candidates-at-all).
 
 ## Reproducibility
 
@@ -354,6 +375,7 @@ make action-simulation   # incremental value per customer/action -> reports/acti
 make optimize            # solve the budget/capacity/risk-constrained allocation -> reports/optimization_report.{md,json}
 make montecarlo          # scenario simulation (needs make optimize) -> reports/monte_carlo_report.{md,json}
 make app                 # launch the Streamlit dashboard (needs the full pipeline above to have run)
+make governance          # assemble the explainability/governance write-up -> reports/explainability_governance.md
 make test              # run the test suite
 ```
 
@@ -373,7 +395,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `app/{pages,components}/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,simulation,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `app/{pages,components}/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,simulation,governance,utils}/`, `tests/`.
 
 ## Tech stack
 

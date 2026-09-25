@@ -1,4 +1,4 @@
-.PHONY: install test generate-data quality features profitability econometrics models clv segmentation actions action-simulation optimize montecarlo app lint
+.PHONY: install test generate-data quality features profitability econometrics models clv segmentation actions action-simulation optimize montecarlo governance app lint
 
 install:
 	uv sync --extra dev
