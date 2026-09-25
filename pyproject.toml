@@ -37,7 +37,7 @@ packages = ["src/customer_profitability"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "app"]
 
 [tool.ruff]
 line-length = 100

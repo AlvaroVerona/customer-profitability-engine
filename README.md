@@ -9,12 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 12 (Monte Carlo
-> scenario simulation) are complete.** Everything from Phase 13 onward
-> (Streamlit dashboard, explainability/governance write-ups, final
-> report) is not yet implemented. This README will be replaced by the
-> full portfolio-quality version in Phase 18, once those results actually
-> exist — nothing below is a business finding, only a description of what
+> **Status: Phase 0 (project setup) through Phase 13 (Streamlit
+> dashboard) are complete.** Everything from Phase 14 onward
+> (explainability/governance write-ups, final report) is not yet
+> implemented. This README will be replaced by the full portfolio-quality
+> version in Phase 18, once those results actually exist — nothing below
+> is a business finding, only a description of what
 > runs today.
 
 ## What exists today
@@ -278,6 +278,64 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   instances, and every Phase 12 scenario/action-outcome formula
   (including the certain-acceptance closed-form check that caught the
   division bug above).
+- A Phase 13 Streamlit Decision Intelligence Dashboard (`app/`), 8 pages
+  reachable via `st.navigation`: Executive Overview (portfolio KPIs +
+  profitability/CLV distributions, profit by segment, revenue vs. cost),
+  Customer 360 (full per-customer profile, products, balances, risk,
+  churn probability, CLV, recommended actions, historical timeline),
+  Profitability (revenue decomposition and cost waterfall, filterable by
+  segment/product/channel/profitability band), CLV (distribution,
+  historical-vs-future, Monte Carlo band, a survival curve computed live
+  for any customer or the portfolio average), Segmentation (cluster
+  sizes, the Profitability-x-CLV plane from the spec's own mockup, churn/
+  risk/product-usage by segment), Actions (ranked recommendation table
+  for any customer), Optimization (budget/capacity/risk/ROI inputs that
+  **re-solve Phase 11's real OR-Tools ILP live** against Phase 10's
+  already-simulated candidates -- not a canned demo), and Scenario
+  Analysis (Base/Downside/Upside/Stress from Phase 12's precomputed Monte
+  Carlo). Every page reads already-computed Phase 1-12 output through
+  `st.cache_data`-wrapped loaders (`app/components/data_loader.py`);
+  nothing is recomputed except the Optimization page's live re-solve.
+  Colors use a fixed Okabe-Ito categorical order (colorblind-safe, never
+  re-cycled per filter) and an orange/blue polarity pair for profit vs.
+  loss instead of red/green. Validated end to end in a real browser
+  session across all 8 pages, including the live optimizer re-solve
+  (reproduced the precomputed Phase 11 numbers exactly) and both a
+  churned and an active customer on Customer 360 (correctly showing
+  "n/a"/zero-width CLV band for the churned one, live churn probability
+  and ranked actions for the active one) -- caught and fixed a real
+  legend/title overlap in every chart and a confusing "negative cost"
+  display on the Profitability page's KPI tiles during that pass. See
+  `app/components/data_loader.py`'s `merged_customer_overview` for a real
+  bug caught while building Page 1: naively merging `customer_360` (which
+  carries its own copy of `customer_segment` from Phase 3) together with
+  `customers_validated`'s copy would have silently produced
+  `customer_segment_x`/`_y` instead of one unambiguous column.
+- 140 passing unit tests (`tests/test_data_generation.py`,
+  `tests/test_data_quality.py`, `tests/test_features.py`,
+  `tests/test_ftp.py`, `tests/test_risk_cost.py`,
+  `tests/test_profitability.py`, `tests/test_econometrics.py`,
+  `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`,
+  `tests/test_actions.py`, `tests/test_optimization.py`,
+  `tests/test_simulation.py`, `tests/test_dashboard_data.py`) covering
+  reproducibility, financial validity, temporal/referential integrity,
+  correlation structure, every quality-engine check against hand-crafted
+  defective rows, the feature pipeline's NaN-propagation and no-leakage
+  guarantees, every profitability formula against hand-calculated
+  examples, both econometric models' ability to recover *known* true
+  coefficients from simulated data, every Phase 6 target's forward-shift/
+  eligibility logic and calibration, Phase 7's discounting formulas
+  against both hand calculations and a large-sample Monte Carlo
+  cross-check, every Phase 8 labeling rule (including duplicate-name
+  disambiguation) against hand-built cluster centroids, every Phase 9
+  eligibility rule against hand-built customer/account scenarios, every
+  Phase 10 action effect formula against hand-calculated examples
+  (including that `NO_ACTION` nets to exactly zero), every Phase 11
+  constraint (one-per-customer, budget, capacity, risk) against small,
+  hand-solvable optimization instances, every Phase 12 scenario/
+  action-outcome formula (including the certain-acceptance closed-form
+  check that caught the division bug above), and Phase 13's dashboard
+  data-assembly logic against the real pipeline output on disk.
 
 ## Reproducibility
 
@@ -295,6 +353,7 @@ make actions             # action catalog + eligibility -> reports/actions_repor
 make action-simulation   # incremental value per customer/action -> reports/action_simulation_report.{md,json}
 make optimize            # solve the budget/capacity/risk-constrained allocation -> reports/optimization_report.{md,json}
 make montecarlo          # scenario simulation (needs make optimize) -> reports/monte_carlo_report.{md,json}
+make app                 # launch the Streamlit dashboard (needs the full pipeline above to have run)
 make test              # run the test suite
 ```
 
@@ -314,7 +373,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,simulation,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `app/{pages,components}/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,simulation,utils}/`, `tests/`.
 
 ## Tech stack
 

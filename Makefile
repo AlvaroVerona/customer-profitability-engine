@@ -47,4 +47,4 @@ app:
 	uv run streamlit run app/app.py
 
 lint:
-	uv run ruff check src tests
+	uv run ruff check src tests app
