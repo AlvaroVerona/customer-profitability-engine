@@ -44,6 +44,24 @@ def _best_model_name(models: dict, metric: str, higher_is_better: bool) -> str:
     return max(scored, key=scored.get) if higher_is_better else min(scored, key=scored.get)
 
 
+def _split_summary(df: pd.DataFrame, train: pd.Series, val: pd.Series, test: pd.Series, month_col: str = "month") -> dict:
+    """Per Phase 15's time-based validation: the actual calendar-month range
+    and row count of each split, for the dataset actually used -- not the
+    spec's illustrative "Months 1-18/19-21/22-24", which assumes every
+    target dataset spans the same months (it doesn't; see module docstring)."""
+    months = pd.to_datetime(df[month_col])
+
+    def _range(mask: pd.Series) -> dict:
+        subset = months[mask]
+        return {
+            "n": int(mask.sum()),
+            "start": subset.min().strftime("%Y-%m") if len(subset) else None,
+            "end": subset.max().strftime("%Y-%m") if len(subset) else None,
+        }
+
+    return {"train": _range(train), "validation": _range(val), "test": _range(test)}
+
+
 def _run_classification_target(name: str, df: pd.DataFrame, settings: Settings) -> dict:
     train, val, test = time_based_split(df, settings.models)
     logger.info(
@@ -57,7 +75,7 @@ def _run_classification_target(name: str, df: pd.DataFrame, settings: Settings) 
     )
     out = fit_and_evaluate_classification(df, train, val, test)
     champion = _best_model_name(out["models"], "roc_auc", higher_is_better=True)
-    return {"name": name, "champion": champion, **out}
+    return {"name": name, "champion": champion, "split": _split_summary(df, train, val, test), **out}
 
 
 def _run_regression_target(name: str, df: pd.DataFrame, settings: Settings, fit_fn) -> dict:
@@ -65,7 +83,7 @@ def _run_regression_target(name: str, df: pd.DataFrame, settings: Settings, fit_
     logger.info("%s: n=%d (train=%d val=%d test=%d)", name, len(df), train.sum(), val.sum(), test.sum())
     out = fit_fn(df, train, val, test)
     champion = _best_model_name(out["models"], "rmse", higher_is_better=False)
-    return {"name": name, "champion": champion, **out}
+    return {"name": name, "champion": champion, "split": _split_summary(df, train, val, test), **out}
 
 
 def run_all(settings: Settings) -> dict:
@@ -229,6 +247,7 @@ def _json_safe(results: dict, explanations: dict) -> dict:
         out[name] = {
             "champion": result["champion"],
             "n_features": len(result["feature_columns"]),
+            "split": result["split"],
             "models": models_out,
         }
     out["explainability"] = explanations

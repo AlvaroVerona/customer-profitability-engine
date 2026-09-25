@@ -9,13 +9,12 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 14 (Explainability &
-> Governance) are complete.** Everything from Phase 15 onward (model
-> validation consolidation, final report) is not yet implemented. This
-> README will be replaced by the full portfolio-quality version in Phase
-> 18, once those results actually exist — nothing below
-> is a business finding, only a description of what
-> runs today.
+> **Status: Phase 0 (project setup) through Phase 15 (Model Validation)
+> are complete.** Everything from Phase 16 onward (extensive testing
+> consolidation, final report, README polish) is not yet implemented.
+> This README will be replaced by the full portfolio-quality version in
+> Phase 18, once those results actually exist — nothing below is a
+> business finding, only a description of what runs today.
 
 ## What exists today
 
@@ -329,14 +328,27 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   disk (a high-value customer, a typical one, and one of the only 3 of
   12,651 active customers for whom no action beats doing nothing), and a
   closing Responsible Decision-Making section per `PROJECT_SPEC.md` §26.
-- 147 passing unit tests (`tests/test_data_generation.py`,
+- Phase 15 Model Validation (`models/validation.py`,
+  `reports/model_validation_report.md`): consolidates, for all eight
+  Phase 6 targets in one place and without refitting anything, (1) a
+  baseline-vs-champion comparison on the held-out test set (linear/
+  logistic regression vs. random forest/XGBoost) and (2) the actual
+  calendar-month train/validation/test ranges each target's time-based
+  split used (captured in `models/report.py`'s `_split_summary`, since
+  different targets drop different rows and so don't necessarily span
+  identical months). Reports honestly that the baseline is itself the
+  champion on 3 of 8 targets (`loan_balance`,
+  `adoption_consumer_loan`, `adoption_investment_account`) rather than
+  only showing cases where the tree ensembles win.
+- 154 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
   `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`,
   `tests/test_actions.py`, `tests/test_optimization.py`,
   `tests/test_simulation.py`, `tests/test_dashboard_data.py`,
-  `tests/test_explanation.py`) covering reproducibility, financial
+  `tests/test_explanation.py`, `tests/test_model_validation.py`) covering
+  reproducibility, financial
   validity, temporal/referential integrity, correlation structure, every
   quality-engine check against hand-crafted defective rows, the feature
   pipeline's NaN-propagation and no-leakage guarantees, every
@@ -354,9 +366,13 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   instances, every Phase 12 scenario/action-outcome formula (including the
   certain-acceptance closed-form check that caught the division bug
   above), Phase 13's dashboard data-assembly logic against the real
-  pipeline output on disk, and Phase 14's percentile-triggered explanation
+  pipeline output on disk, Phase 14's percentile-triggered explanation
   bullets and selection-rank reasoning against hand-built fixtures
-  (selected / not-selected-with-candidates / no-candidates-at-all).
+  (selected / not-selected-with-candidates / no-candidates-at-all), and
+  Phase 15's baseline-vs-champion uplift-direction logic (higher-is-better
+  and lower-is-better metrics, a zero-baseline edge case, and the
+  baseline-wins case) against a hand-built `ml_report.json`-shaped
+  fixture.
 
 ## Reproducibility
 
@@ -368,6 +384,7 @@ make features           # build Customer 360 -> data/features/customer_360.parqu
 make profitability      # run the profitability engine -> data/processed/profitability_*.parquet
 make econometrics       # fit revenue/churn driver models -> reports/econometrics_report.{md,json}
 make models             # fit all Phase 6 models, persist champions -> reports/ml_report.{md,json}
+make validation          # baseline-vs-champion + time-based split summary (needs make models) -> reports/model_validation_report.md
 make clv                # build CLV (needs make models to have run first) -> data/processed/clv.parquet
 make segmentation       # cluster customers (needs make clv) -> reports/segmentation_report.{md,json}
 make actions             # action catalog + eligibility -> reports/actions_report.{md,json}

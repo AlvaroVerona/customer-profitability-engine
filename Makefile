@@ -1,4 +1,4 @@
-.PHONY: install test generate-data quality features profitability econometrics models clv segmentation actions action-simulation optimize montecarlo governance app lint
+.PHONY: install test generate-data quality features profitability econometrics models validation clv segmentation actions action-simulation optimize montecarlo governance app lint
 
 install:
 	uv sync --extra dev
@@ -24,6 +24,9 @@ econometrics:
 
 models:
 	uv run python -m customer_profitability.models.report
+
+validation:
+	uv run python -m customer_profitability.models.validation
 
 clv:
 	uv run python -m customer_profitability.clv.report
