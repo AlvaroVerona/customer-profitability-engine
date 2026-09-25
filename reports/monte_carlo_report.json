@@ -1,0 +1,106 @@
+{
+  "base": {
+    "scenario": "Base",
+    "total_portfolio_value": {
+      "mean": 23168301.96340481,
+      "p5": 23010753.172562912,
+      "p50": 23166355.813097186,
+      "p95": 23332826.449473448,
+      "std": 98244.59020746102
+    },
+    "incremental_action_profit": {
+      "mean": 1390200.4175993667,
+      "p5": 1309540.8838042447,
+      "p50": 1389962.5402909778,
+      "p95": 1471027.4087724609,
+      "std": 49364.62050989202
+    },
+    "realized_action_cost": {
+      "mean": 13479.3407,
+      "p5": 12937.0,
+      "p50": 13477.0,
+      "p95": 14017.05,
+      "std": 329.80507883219445
+    },
+    "probability_negative_incremental_profit": 0.0,
+    "probability_budget_overrun": 0.0
+  },
+  "downside": {
+    "scenario": "Downside",
+    "total_portfolio_value": {
+      "mean": 20981240.76515672,
+      "p5": 20849012.218921736,
+      "p50": 20979190.52682679,
+      "p95": 21121506.873520073,
+      "std": 83425.59736466328
+    },
+    "incremental_action_profit": {
+      "mean": 1160776.3095969944,
+      "p5": 1093749.4408153656,
+      "p50": 1160265.6745421593,
+      "p95": 1229528.733913692,
+      "std": 41188.17044699684
+    },
+    "realized_action_cost": {
+      "mean": 13481.3539,
+      "p5": 12939.0,
+      "p50": 13486.0,
+      "p95": 14029.05,
+      "std": 330.10332269577356
+    },
+    "probability_negative_incremental_profit": 0.0,
+    "probability_budget_overrun": 0.0
+  },
+  "upside": {
+    "scenario": "Upside",
+    "total_portfolio_value": {
+      "mean": 25557077.71845253,
+      "p5": 25374012.270524688,
+      "p50": 25554662.881065797,
+      "p95": 25745307.10148412,
+      "std": 114034.71754267135
+    },
+    "incremental_action_profit": {
+      "mean": 1627760.1184798111,
+      "p5": 1532575.6574785237,
+      "p50": 1627543.2413818124,
+      "p95": 1723668.6006926254,
+      "std": 58356.953693862306
+    },
+    "realized_action_cost": {
+      "mean": 13489.6112,
+      "p5": 12948.95,
+      "p50": 13490.0,
+      "p95": 14026.05,
+      "std": 330.5503741255786
+    },
+    "probability_negative_incremental_profit": 0.0,
+    "probability_budget_overrun": 0.0
+  },
+  "stress": {
+    "scenario": "Stress",
+    "total_portfolio_value": {
+      "mean": 18239089.425395392,
+      "p5": 18138132.54624635,
+      "p50": 18237397.059289955,
+      "p95": 18344380.807857424,
+      "std": 63482.110464085425
+    },
+    "incremental_action_profit": {
+      "mean": 859958.4140665471,
+      "p5": 810056.9243222172,
+      "p50": 859690.1277659481,
+      "p95": 911078.8406556792,
+      "std": 30645.764335590677
+    },
+    "realized_action_cost": {
+      "mean": 13485.5071,
+      "p5": 12940.0,
+      "p50": 13487.0,
+      "p95": 14026.05,
+      "std": 327.86267544444576
+    },
+    "probability_negative_incremental_profit": 0.0,
+    "probability_budget_overrun": 0.0
+  }
+}

@@ -9,12 +9,13 @@ profit.
 
 Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
 
-> **Status: Phase 0 (project setup) through Phase 11 (optimization
-> engine) are complete.** Everything from Phase 12 onward (Monte Carlo
-> scenarios, dashboard) is not yet implemented. This README will be
-> replaced by the full portfolio-quality version in Phase 18, once those
-> results actually exist — nothing below is a business finding, only a
-> description of what runs today.
+> **Status: Phase 0 (project setup) through Phase 12 (Monte Carlo
+> scenario simulation) are complete.** Everything from Phase 13 onward
+> (Streamlit dashboard, explainability/governance write-ups, final
+> report) is not yet implemented. This README will be replaced by the
+> full portfolio-quality version in Phase 18, once those results actually
+> exist — nothing below is a business finding, only a description of what
+> runs today.
 
 ## What exists today
 
@@ -225,27 +226,58 @@ Full specification: [`PROJECT_SPEC.md`](PROJECT_SPEC.md).
   `data/processed/optimized_action_plan.parquet` (every active customer's
   recommended action, defaulting to `NO_ACTION`) and
   `reports/optimization_report.{md,json}`.
-- 124 passing unit tests (`tests/test_data_generation.py`,
+- A Phase 12 Monte Carlo Scenario Simulation (`src/customer_profitability/simulation/`):
+  Base/Downside/Upside/Stress scenarios (`scenarios.py`, two composite
+  multipliers per scenario -- churn and net profit -- since `expected_profit`
+  is already netted by Phase 7, documented as a deliberate simplification
+  rather than pretending to decompose balance/activity/credit-loss effects
+  the pipeline doesn't track separately at this stage), each run at
+  10,000 simulations (`config.simulation.n_simulations`) combining (1) the
+  same survival-timing + profit-noise mechanism as Phase 7's CLV Monte
+  Carlo, now aggregated as a *portfolio total per draw* rather than
+  per-customer percentiles, and (2) a genuine Bernoulli re-draw of
+  acceptance for every Phase 11-selected action, answering PROJECT_SPEC.md
+  12's "quantify uncertainty in ... action outcomes" and "probability of
+  budget overrun" concretely (budget was set against *expected* cost;
+  realized cost is all-or-nothing per customer). Building the action-
+  outcome piece caught a real modeling bug: dividing Phase 10's already-
+  blended `incremental_profit` back out by `acceptance_probability` does
+  *not* recover the true conditional-on-acceptance value, because the CLV
+  survival formula blends accept/reject nonlinearly -- fixed by explicitly
+  recomputing both branches (accept: full churn-reduction + full effect;
+  reject: scenario-adjusted baseline) and drawing Bernoulli acceptance
+  between them. On the full portfolio: P(negative incremental action
+  profit) and P(budget overrun) are both 0.00% in every scenario including
+  Stress -- a genuine result (verified, not a mild scenario or a rounding
+  artifact) of Phase 11 having already selected only the best ~11% of
+  candidates, not evidence that the underlying action economics can never
+  go negative; the report says so explicitly. Total portfolio value P50
+  ranges from ~18.2M (Stress) to ~25.6M (Upside) against ~23.2M (Base).
+  Output at `reports/monte_carlo_report.{md,json}`.
+- 137 passing unit tests (`tests/test_data_generation.py`,
   `tests/test_data_quality.py`, `tests/test_features.py`,
   `tests/test_ftp.py`, `tests/test_risk_cost.py`,
   `tests/test_profitability.py`, `tests/test_econometrics.py`,
   `tests/test_models.py`, `tests/test_clv.py`, `tests/test_segmentation.py`,
-  `tests/test_actions.py`, `tests/test_optimization.py`) covering
-  reproducibility, financial validity, temporal/referential integrity,
-  correlation structure, every quality-engine check against hand-crafted
-  defective rows, the feature pipeline's NaN-propagation and no-leakage
-  guarantees, every profitability formula against hand-calculated
-  examples, both econometric models' ability to recover *known* true
-  coefficients from simulated data, every Phase 6 target's forward-shift/
-  eligibility logic and calibration, Phase 7's discounting formulas
-  against both hand calculations and a large-sample Monte Carlo
-  cross-check, every Phase 8 labeling rule (including duplicate-name
-  disambiguation) against hand-built cluster centroids, every Phase 9
-  eligibility rule against hand-built customer/account scenarios, every
-  Phase 10 action effect formula against hand-calculated examples
-  (including that `NO_ACTION` nets to exactly zero), and every Phase 11
-  constraint (one-per-customer, budget, capacity, risk) against small,
-  hand-solvable optimization instances.
+  `tests/test_actions.py`, `tests/test_optimization.py`,
+  `tests/test_simulation.py`) covering reproducibility, financial
+  validity, temporal/referential integrity, correlation structure, every
+  quality-engine check against hand-crafted defective rows, the feature
+  pipeline's NaN-propagation and no-leakage guarantees, every
+  profitability formula against hand-calculated examples, both
+  econometric models' ability to recover *known* true coefficients from
+  simulated data, every Phase 6 target's forward-shift/eligibility logic
+  and calibration, Phase 7's discounting formulas against both hand
+  calculations and a large-sample Monte Carlo cross-check, every Phase 8
+  labeling rule (including duplicate-name disambiguation) against
+  hand-built cluster centroids, every Phase 9 eligibility rule against
+  hand-built customer/account scenarios, every Phase 10 action effect
+  formula against hand-calculated examples (including that `NO_ACTION`
+  nets to exactly zero), every Phase 11 constraint (one-per-customer,
+  budget, capacity, risk) against small, hand-solvable optimization
+  instances, and every Phase 12 scenario/action-outcome formula
+  (including the certain-acceptance closed-form check that caught the
+  division bug above).
 
 ## Reproducibility
 
@@ -262,6 +294,7 @@ make segmentation       # cluster customers (needs make clv) -> reports/segmenta
 make actions             # action catalog + eligibility -> reports/actions_report.{md,json}
 make action-simulation   # incremental value per customer/action -> reports/action_simulation_report.{md,json}
 make optimize            # solve the budget/capacity/risk-constrained allocation -> reports/optimization_report.{md,json}
+make montecarlo          # scenario simulation (needs make optimize) -> reports/monte_carlo_report.{md,json}
 make test              # run the test suite
 ```
 
@@ -281,7 +314,7 @@ SYNTHETIC RAW DATA → DATA QUALITY → CUSTOMER 360
 ## Repository structure
 
 See `PROJECT_SPEC.md` §7 for the full target layout. Implemented so far:
-`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,utils}/`, `tests/`.
+`config/`, `data/`, `reports/`, `src/customer_profitability/{data,features,profitability,econometrics,models,clv,segmentation,actions,optimization,simulation,utils}/`, `tests/`.
 
 ## Tech stack
 
