@@ -19,9 +19,11 @@ from components.data_loader import (
     load_profitability_summary,
     load_segments,
 )
+from components.demo_banner import demo_banner
 from components.tables import eur, pct
 
 st.title("Customer 360")
+demo_banner()
 
 customers = load_customers()
 customer_id = st.selectbox("Customer", sorted(customers["customer_id"]))

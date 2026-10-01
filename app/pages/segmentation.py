@@ -10,9 +10,11 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from components.charts import bar_by_category, scatter_2d
 from components.data_loader import load_segment_profiles
+from components.demo_banner import demo_banner
 from components.tables import format_currency_columns
 
 st.title("Economic Segmentation")
+demo_banner()
 st.caption("K-Means on 12 standardized economic variables (Phase 8) -- active customers only. Segment names come from a rule over each cluster's standardized centroid, not hand-picked.")
 
 profiles = load_segment_profiles().sort_values("n_customers", ascending=False)

@@ -15,10 +15,12 @@ from components.data_loader import (
     load_profitability_monthly,
     merged_customer_overview,
 )
+from components.demo_banner import demo_banner
 from components.filters import product_filter, profitability_filters
 from components.tables import eur, kpi_row
 
 st.title("Profitability")
+demo_banner()
 st.caption("Revenue decomposition, funding contribution, risk cost, operating cost, and acquisition cost -- Phase 4's economic profit waterfall.")
 
 overview = merged_customer_overview()

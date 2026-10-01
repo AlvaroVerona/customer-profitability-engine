@@ -11,11 +11,13 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from components.charts import bar_by_category
 from components.data_loader import load_monte_carlo_report
+from components.demo_banner import demo_banner
 from components.tables import eur, pct
 
 from customer_profitability.simulation.scenarios import SCENARIOS
 
 st.title("Scenario Analysis")
+demo_banner()
 st.caption("Base / Downside / Upside / Stress Monte Carlo (Phase 12), 10,000 simulations per scenario against Phase 11's optimized action plan.")
 
 report = load_monte_carlo_report()
