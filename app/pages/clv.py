@@ -12,11 +12,13 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from components.charts import line_series, polarity_histogram, scatter_2d
 from components.data_loader import get_settings, load_clv
+from components.demo_banner import demo_banner
 from components.tables import eur, kpi_row
 
 from customer_profitability.clv.discounting import clv_config_monthly_rate
 
 st.title("Customer Lifetime Value")
+demo_banner()
 
 clv = load_clv()
 active = clv[clv["is_active"]]

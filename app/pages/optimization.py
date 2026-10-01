@@ -14,13 +14,15 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from components.charts import bar_by_category
-from components.data_loader import get_settings, load_incremental_value, load_segments
+from components.data_loader import demo_scale, get_settings, load_incremental_value, load_segments
+from components.demo_banner import demo_banner
 from components.tables import eur, kpi_row
 
 from customer_profitability.optimization.constraints import OptimizationConstraints
 from customer_profitability.optimization.solver import counterfactual_summary, optimize
 
 st.title("Optimization")
+demo_banner()
 st.caption(
     "Selects the customer/action portfolio maximizing total incremental profit under your constraints "
     "(exact OR-Tools CP-SAT solve). Optimal under Phase 10's simulated effects -- a decision-support "
@@ -28,14 +30,15 @@ st.caption(
 )
 
 settings = get_settings()
+scale = demo_scale()  # 1.0 on the full data; the sampling fraction on the demo sample
 
 with st.form("optimization_constraints"):
     c1, c2 = st.columns(2)
-    budget = c1.number_input("Budget (€)", min_value=0.0, value=float(settings.optimization.default_budget), step=1000.0)
-    capacity = c2.number_input("Operational capacity (# actions)", min_value=1, value=int(settings.optimization.default_capacity), step=100)
+    budget = c1.number_input("Budget (€)", min_value=0.0, value=float(settings.optimization.default_budget) * scale, step=1000.0)
+    capacity = c2.number_input("Operational capacity (# actions)", min_value=1, value=max(1, round(settings.optimization.default_capacity * scale)), step=100)
     c3, c4 = st.columns(2)
     max_risk = c3.number_input(
-        "Max incremental monthly credit risk (€)", min_value=0.0, value=float(settings.optimization.default_max_incremental_risk_monthly), step=1000.0
+        "Max incremental monthly credit risk (€)", min_value=0.0, value=float(settings.optimization.default_max_incremental_risk_monthly) * scale, step=1000.0
     )
     min_roi = c4.number_input("Min gross ROI (delta_clv / cost)", value=float(settings.optimization.default_min_expected_roi), step=0.1)
     submitted = st.form_submit_button("Run Optimization", type="primary")

@@ -10,9 +10,11 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from components.charts import bar_by_category, polarity_histogram, revenue_vs_cost_scatter
 from components.data_loader import merged_customer_overview
+from components.demo_banner import demo_banner
 from components.tables import eur, kpi_row, pct
 
 st.title("Executive Overview")
+demo_banner()
 st.caption("Synthetic neobank portfolio -- Phase 4 profitability + Phase 7 CLV, as of the observation window end.")
 
 df = merged_customer_overview()

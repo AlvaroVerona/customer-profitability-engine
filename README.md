@@ -1,5 +1,19 @@
 # Customer Profitability & Action Optimization Engine
 
+[![CI](https://github.com/AlvaroVerona/customer-profitability-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/AlvaroVerona/customer-profitability-engine/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+**[Live demo](https://customer-profitability-engine.streamlit.app/)** (runs on a 3,000-customer sample of the
+20,000-customer dataset) · or locally:
+
+```bash
+git clone https://github.com/AlvaroVerona/customer-profitability-engine.git
+cd customer-profitability-engine
+pip install -e .
+streamlit run app/app.py     # no pipeline run needed: uses demo_data/
+```
+
 **A customer-level economic decision engine for a synthetic neobank** that
 combines profitability accounting, Funds Transfer Pricing, credit risk,
 econometrics, machine learning, Customer Lifetime Value, simulation, and
@@ -137,7 +151,10 @@ flowchart TD
 
 ## Dashboard
 
-An 8-page Streamlit decision-support dashboard (`app/`, `make app`):
+An 8-page Streamlit decision-support dashboard (`app/`, `make app`). A hosted demo runs on a stratified 3,000-customer sample
+(`demo_data/`, rebuilt with `make demo-data`) because the full pipeline output is ~300 MB;
+the dashboard shows a banner when it is on the sample and scales the optimization
+constraints to match:
 Executive Overview, Customer 360, Profitability, CLV, Segmentation,
 Actions, Optimization (re-solves the real CP-SAT model live against your
 own budget/capacity/risk inputs), and Scenario Analysis.
@@ -175,8 +192,10 @@ make optimize           # solve the allocation -> reports/optimization_report.{m
 make montecarlo         # scenario simulation (needs make optimize) -> reports/monte_carlo_report.{md,json}
 make governance         # explainability/governance write-up -> reports/explainability_governance.md
 make final-report       # 8-section final report -> reports/final_report.md
+make demo-data          # rebuild the 3,000-customer sample the hosted demo runs on (demo_data/)
+make all                # every stage above, in order, then the tests
 make app                # launch the Streamlit dashboard
-make test               # run the 159-test suite
+make test               # run the test suite
 make lint               # ruff check src tests app
 ```
 
@@ -184,6 +203,7 @@ make lint               # ruff check src tests app
 
 ```text
 config/                          settings.yaml (all parameters, seed 42)
+demo_data/                       3,000-customer sample the hosted dashboard runs on
 data/{raw,processed,features}/   generated data at every pipeline stage
 reports/                         every phase's markdown/JSON report + figures + final_report.md
 src/customer_profitability/

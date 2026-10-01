@@ -9,12 +9,14 @@ import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from components.data_loader import get_settings, load_clv, load_incremental_value
+from components.demo_banner import demo_banner
 from components.tables import eur, pct
 
 from customer_profitability.actions.explanation import explain_customer_recommendation
 from customer_profitability.actions.incremental_value import recommend_action
 
 st.title("Actions")
+demo_banner()
 st.caption(
     "Recommended actions for a selected customer, ranked by incremental profit against NO_ACTION "
     "(Phase 10's action impact simulation). Positive values are not a guarantee of acceptance -- "
