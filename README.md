@@ -159,15 +159,21 @@ Executive Overview, Customer 360, Profitability, CLV, Segmentation,
 Actions, Optimization (re-solves the real CP-SAT model live against your
 own budget/capacity/risk inputs), and Scenario Analysis.
 
-**Executive Overview** — portfolio KPIs, profitability/CLV distributions:
+<p align="center">
+  <img src="docs/screenshots/executive_overview.jpg" width="49%" alt="Executive Overview" />
+  <img src="docs/screenshots/customer_360.jpg" width="49%" alt="Customer 360" />
+  <img src="docs/screenshots/profitability.jpg" width="49%" alt="Profitability waterfall" />
+  <img src="docs/screenshots/clv.jpg" width="49%" alt="Customer Lifetime Value" />
+  <img src="docs/screenshots/segmentation.jpg" width="49%" alt="Economic Segmentation" />
+  <img src="docs/screenshots/actions.jpg" width="49%" alt="Recommended actions with decision explanation" />
+  <img src="docs/screenshots/optimization.jpg" width="49%" alt="Optimization, live CP-SAT solve" />
+  <img src="docs/screenshots/scenario_analysis.jpg" width="49%" alt="Monte Carlo scenario analysis" />
+</p>
 
-![Executive Overview dashboard page](reports/figures/dashboard_overview.jpg)
-
-**Optimization** — a live re-solve of the same CP-SAT model used in the
-pipeline, reproducing the precomputed allocation exactly (44,406
-candidates, 5,000 selected, EUR 1.38M incremental profit):
-
-![Optimization dashboard page, live solved](reports/figures/dashboard_optimization.jpg)
+Executive Overview · Customer 360 · Profitability · CLV · Segmentation · Actions ·
+Optimization (a live re-solve of the same CP-SAT model used in the pipeline) ·
+Scenario Analysis. Try them in the [live demo](https://customer-profitability-engine.streamlit.app/).
+Screenshots show the 3,000-customer demo sample, hence the banner.
 
 ## Reproducibility
 
